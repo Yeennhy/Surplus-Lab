@@ -4,15 +4,18 @@ Tài liệu này là điểm thống nhất ban đầu; nhóm có thể chỉnh 
 
 ## Route
 
-`/` → `/learn/chapter-1` → `/learn/chapter-2` → `/learn/chapter-3` → `/learn/chapter-4` → `/challenge`. `/sandbox` dành cho P1.
+`/` → `/learn/chapter-1` → `/learn/chapter-2` → `/learn/chapter-3` → `/learn/chapter-4` → `/challenge` là luồng P0. Campaign Map do M1 xây dựng trên nền Next.js App Router, có thể nằm ở Landing hoặc `/campaign`. `/sandbox` chỉ là route placeholder P1, không chặn luồng P0.
 
 ## Ranh giới code
 
 - `features/market`: Bot, Commodity, Trade, MarketConfig, MarketState; hàm khởi tạo, thực hiện một lượt, thống kê và reset. Không phụ thuộc React.
 - `features/factory`: thông số đầu vào, trạng thái theo giờ, hàm tính c/v/m/G. Không phụ thuộc React.
 - `features/labor`, `features/value`, `features/quiz`: đánh giá đáp án và trạng thái bài học.
+- `features/progress`: trạng thái nhiệm vụ **trong phiên chơi** cho P0; lưu/khôi phục bằng localStorage là P1. M1 sở hữu state, M8 hỗ trợ schema và kiểm thử.
 - `content`: dữ liệu tình huống, câu hỏi, giải thích và nguồn tham khảo; không chứa logic hiển thị.
 - `components`: hiển thị, animation, biểu đồ, điều khiển; chỉ gọi logic qua API của `features`.
+
+Giữ Next.js App Router, TypeScript và Tailwind hiện có. Market/Factory Engine chạy phía client; không cần backend API cho MVP. Dùng Zustand khi việc chia sẻ state thực sự cần, không phải yêu cầu mặc định. M5 chỉ làm công thức Sandbox sau khi P0 đạt [cổng quyết định P1](PHAN_CONG_9_THANH_VIEN.md#cổng-quyết-định-có-làm-p1).
 
 ## Bất biến và kiểm tra tối thiểu
 

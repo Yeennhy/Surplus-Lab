@@ -1,8 +1,8 @@
 # Tiến độ Surplus Lab trong 6 ngày
 
-**Cách dùng:** Điền `Ngày thực tế`, `Người phụ trách`, trạng thái (`Chưa làm` / `Đang làm` / `Chờ review` / `Hoàn thành` / `Bị chặn`) và link PR/minh chứng. Mã M01–M09 trong kế hoạch gốc chỉ là vai trò đề xuất; bảng này chưa gán người. Cập nhật đầu ngày về việc làm và phụ thuộc, cuối ngày về kết quả và lỗi. Không đánh dấu hoàn thành nếu chưa chạy/kiểm tra được.
+**Cách dùng:** Điền `Ngày thực tế`, tên người, trạng thái (`Chưa làm` / `Đang làm` / `Chờ review` / `Hoàn thành` / `Bị chặn`) và link PR/minh chứng. Mã vai trò M1–M9 theo [file phân công chính thức](PHAN_CONG_9_THANH_VIEN.md); tên người chưa được gán. Ngày 1–4 chỉ làm P0; ngày 5 sửa P0 và chỉ bắt đầu P1 nếu đạt cổng kiểm tra; ngày 6 release, không thêm chức năng lớn. Cập nhật đầu ngày về việc làm/phụ thuộc và cuối ngày về kết quả/lỗi. Không đánh dấu hoàn thành nếu chưa chạy/kiểm tra được.
 
-**Ngày bắt đầu:** _chưa chốt_ · **Repo:** _chưa tạo Git_ · **Staging:** _chưa có_ · **Production:** _chưa có_
+**Ngày bắt đầu:** _chưa chốt_ · **Repo:** [Yeennhy/Surplus-Lab](https://github.com/Yeennhy/Surplus-Lab) · **Staging:** _chưa có_ · **Production:** _chưa có_
 
 ## Ngày 1 – Nền tảng và hợp đồng kỹ thuật
 
@@ -10,15 +10,16 @@
 
 | Việc cần làm | Đầu ra/điều kiện kiểm tra | Người phụ trách | Trạng thái | PR/minh chứng |
 |---|---|---|---|---|
-| Khởi tạo Next.js, TypeScript, Tailwind, lint, route, Git và staging | Project chạy trên máy nhóm; các route mở được; deploy thử | — | Đang làm | Khung project hiện tại |
-| Chốt màu, font, layout desktop và component chung | Figma/wireframe và quy tắc UI được chia sẻ | — | Chưa làm | — |
-| Chốt `Bot`, `Commodity`, `Trade`, `MarketState` và thuật toán giao dịch | Interface/pseudocode được UI thị trường chấp nhận | — | Chưa làm | — |
-| Phác thảo UI thị trường | Wireframe bot, controls, dashboard; component skeleton | — | Chưa làm | — |
-| Chốt flow chương 2 | ≥3 tình huống, lựa chọn và phản hồi; skeleton | — | Chưa làm | — |
-| Chốt Factory Engine và test case | Model và mốc 0/4/8 giờ đối chiếu giáo trình | — | Chưa làm | — |
-| Phác thảo nhà máy 2D | Wireframe, timeline, danh sách asset | — | Chưa làm | — |
-| Chốt flow chương 4 và cấu trúc quiz | Thẻ c/v/m, công thức, schema câu hỏi | — | Chưa làm | — |
-| Chuẩn hóa nội dung bốn chương | Nội dung, câu hỏi đầu tiên, bảng đối chiếu nguồn | — | Chưa làm | — |
+| Kiểm tra khung Next.js, TypeScript, Tailwind, lint, route, Git; chuẩn bị staging | Project chạy trên máy nhóm; các route mở được; deploy thử | M1 + M9 | Đang làm | Khung project hiện tại; staging chưa có |
+| Chốt màu, font, layout desktop và component chung | Figma/wireframe và quy tắc UI được chia sẻ | M1 | Chưa làm | — |
+| Chốt `Bot`, `Commodity`, `Trade`, `MarketSnapshot` và thuật toán giao dịch | Interface/pseudocode được UI thị trường chấp nhận | M3 + M2 | Chưa làm | — |
+| Phác thảo UI thị trường bằng mock | Bot, controls, dashboard theo schema đã chốt | M2 | Chưa làm | — |
+| Chốt flow chương 2 và thẻ chương 4 | ≥3 tình huống, phân loại c/v/m, component skeleton | M6 | Chưa làm | — |
+| Chốt Factory Engine và test case | Model và mốc 0/4/8 giờ đối chiếu giáo trình | M5 + M4 | Chưa làm | — |
+| Phác thảo nhà máy 2D bằng mock | Scene, timeline, danh sách asset | M4 | Chưa làm | — |
+| Chốt cấu trúc quiz và UI câu hỏi mẫu | Schema Question/QuizResult và mock | M7 + M8 | Chưa làm | — |
+| Chuẩn hóa dữ liệu chương/quiz, game state trong phiên | Dữ liệu mẫu và schema hỗ trợ M1/M7; không phụ thuộc Sandbox | M8 | Chưa làm | — |
+| Test plan, đối chiếu nguồn/Figma và cấu trúc | Danh sách kiểm thử theo module | M9 | Chưa làm | — |
 
 **Checkpoint cuối ngày:** Mọi người chạy được project, hiểu interface dùng chung, có branch riêng; repo, staging, design system và nội dung nền đã sẵn sàng.
 
@@ -28,15 +29,15 @@
 
 | Việc cần làm | Đầu ra/điều kiện kiểm tra | Người phụ trách | Trạng thái | PR/minh chứng |
 |---|---|---|---|---|
-| Layout, navigation, chapter wrapper | Đi qua các route chính | — | Chưa làm | — |
-| Landing và UI chung | Trang chủ hoạt động cơ bản | — | Chưa làm | — |
-| Market Engine: 100 bot, 2 hàng hóa, giao dịch và kiểm tra hợp lệ | Nhiều giao dịch chạy được; giao interface cho UI | — | Chưa làm | — |
-| UI thị trường: bot, Start/Pause/Reset, speed/probability/margin | Controls và network bản đầu | — | Chưa làm | — |
-| Chương 2: hai điều kiện sức lao động thành hàng hóa | Mini-game đầu tiên | — | Chưa làm | — |
-| Factory Engine: c, v, m, G theo giờ | Tính đúng số liệu giáo trình; giao interface cho UI | — | Chưa làm | — |
-| Scene nhà máy: bông, máy, công nhân, sản phẩm | Giao diện 2D bản đầu | — | Chưa làm | — |
-| Chương 4: phân loại và công thức | Tương tác cơ bản | — | Chưa làm | — |
-| Nội dung giải thích và bộ quiz | Bản dữ liệu đầu tiên có nguồn đối chiếu | — | Chưa làm | — |
+| Layout, navigation, Campaign Map và Landing | Đi qua các route chính | M1 | Chưa làm | — |
+| Market Engine: 100 bot, 2 hàng hóa, giao dịch và kiểm tra hợp lệ | Nhiều giao dịch chạy được; giao interface cho UI | M3 | Chưa làm | — |
+| UI thị trường: bot, Start/Pause/Reset, speed/probability/margin | Controls và network bản đầu | M2 | Chưa làm | — |
+| Chương 2: hai điều kiện sức lao động thành hàng hóa | Mini-game đầu tiên | M6 | Chưa làm | — |
+| Factory Engine: c, v, m, G theo giờ | Tính đúng số liệu giáo trình; giao interface cho UI | M5 | Chưa làm | — |
+| Scene nhà máy: bông, máy, công nhân, sản phẩm | Giao diện 2D bản đầu | M4 | Chưa làm | — |
+| Chương 4: phân loại và công thức | Tương tác cơ bản | M6 | Chưa làm | — |
+| Quiz: submit, kiểm tra đáp án và điểm | Chạy với dữ liệu mẫu | M7 | Chưa làm | — |
+| Tích hợp dữ liệu chương/quiz và test module | Nội dung mẫu dùng được; bug được ghi | M8 + M9 | Chưa làm | — |
 
 **Checkpoint cuối ngày:** Hai engine chạy được và bàn giao API; Landing, mini-game và scene có bản đầu; các module có thể tích hợp.
 
@@ -46,15 +47,15 @@
 
 | Việc cần làm | Đầu ra/điều kiện kiểm tra | Người phụ trách | Trạng thái | PR/minh chứng |
 |---|---|---|---|---|
-| Tích hợp module và xử lý routing/lỗi chung | Bản tích hợp đầu tiên | — | Chưa làm | — |
-| Hoàn thiện Landing, navigation, chuyển cảnh và UI chung | Giao diện nhất quán | — | Chưa làm | — |
-| Market Engine: thống kê, bất biến, unit test | Tổng tiền/hàng/giá trị tham chiếu được bảo toàn | — | Chưa làm | — |
-| Nối Market Engine với UI và biểu đồ | Chương 1 mô phỏng trực tiếp | — | Chưa làm | — |
-| Hoàn thiện chương 2 | Chơi từ đầu đến cuối, có giải thích | — | Chưa làm | — |
-| Factory Engine: tính timeline, test 0/4/8 giờ | Giá trị mới 0/15/30; m tại 4/8 giờ là 0/15 | — | Chưa làm | — |
-| Nối nhà máy với timeline, animation, dashboard | Chương 3 chạy 8 giờ | — | Chưa làm | — |
-| Hoàn thiện chương 4 và lập trình quiz | Phân loại được; có thể trả lời câu hỏi | — | Chưa làm | — |
-| QA nội dung chương 1–2 và ghi bug | Danh sách lỗi có mức ưu tiên | — | Chưa làm | — |
+| Game state mở khóa trong phiên chơi | Nhiệm vụ locked/unlocked/completed, chưa cần localStorage | M1 + M8 | Chưa làm | — |
+| Market Engine: thống kê, bất biến, unit test | Tổng tiền/hàng/giá trị tham chiếu được bảo toàn | M3 | Chưa làm | — |
+| Nối Market Engine với UI và biểu đồ cơ bản | Chương 1 mô phỏng trực tiếp | M2 | Chưa làm | — |
+| Hoàn thiện chương 2 và 4 | Chơi được, có giải thích và phân loại c/v/m | M6 | Chưa làm | — |
+| Factory Engine: tính timeline, test 0/4/8 giờ | Giá trị mới 0/15/30; m tại 4/8 giờ là 0/15 | M5 | Chưa làm | — |
+| Nối nhà máy với timeline, chuyển động cơ bản, dashboard | Chương 3 chạy 8 giờ | M4 | Chưa làm | — |
+| Quiz kết quả, giải thích và làm lại | Hoạt động với dữ liệu mẫu | M7 | Chưa làm | — |
+| Tích hợp nội dung/quiz và test module độc lập | Dữ liệu đúng schema, không đợi Sandbox | M8 | Chưa làm | — |
+| QA liên module, đối chiếu công thức và ghi bug | Danh sách lỗi có mức ưu tiên | M9 | Chưa làm | — |
 
 **Checkpoint cuối ngày:** Bốn chương có tương tác; quiz nhận đáp án; mọi module chạy độc lập và ghép được vào layout.
 
@@ -64,38 +65,35 @@
 
 | Việc cần làm | Đầu ra/điều kiện kiểm tra | Người phụ trách | Trạng thái | PR/minh chứng |
 |---|---|---|---|---|
-| Tích hợp hành trình Landing → Quiz | Không kẹt luồng hoặc lỗi runtime | — | Chưa làm | — |
-| Thống nhất giao diện và responsive desktop | UI hoàn chỉnh phiên bản đầu | — | Chưa làm | — |
-| Kiểm thử Market Engine: 100 bot, biên tham số, nhiều giao dịch | Bất biến và điều kiện giao dịch đạt | — | Chưa làm | — |
-| Hoàn thiện chương 1: animation, thống kê, biểu đồ | Chương 1 feature complete | — | Chưa làm | — |
-| Hoàn thiện chương 2: hướng dẫn, feedback, kết quả | Chương 2 feature complete | — | Chưa làm | — |
-| Kiểm tra công thức và trường hợp biên nhà máy | c=106, v=15, m=15, G=136 tại 8 giờ | — | Chưa làm | — |
-| Hoàn thiện scene nhà máy và mốc hỏi 4 giờ | Chương 3 feature complete | — | Chưa làm | — |
-| Hoàn thiện chương 4, quiz và trang kết quả | ≥10 câu có giải thích; reset/làm lại được | — | Chưa làm | — |
-| Đối chiếu nội dung toàn site với giáo trình; deploy staging | Báo cáo QA nội dung và URL staging | — | Chưa làm | — |
+| Tích hợp hành trình Landing → Quiz qua Campaign Map | Không kẹt luồng hoặc lỗi runtime, chưa cần lưu sau refresh | M1 + M9 | Chưa làm | — |
+| Thống nhất giao diện và responsive desktop cơ bản | UI P0 sử dụng được | M1 | Chưa làm | — |
+| Kiểm thử Market Engine: 100 bot, biên tham số, nhiều giao dịch | Bất biến và điều kiện giao dịch đạt | M3 | Chưa làm | — |
+| Hoàn thiện chương 1: controls, chỉ số, biểu đồ cơ bản | Chương 1 P0 hoàn chỉnh | M2 | Chưa làm | — |
+| Hoàn thiện chương 2/4: hướng dẫn, feedback, kết quả | Chương 2/4 P0 hoàn chỉnh | M6 | Chưa làm | — |
+| Kiểm tra công thức và trường hợp biên nhà máy | c=106, v=15, m=15, G=136 tại 8 giờ | M5 | Chưa làm | — |
+| Hoàn thiện scene nhà máy và mốc hỏi 4 giờ | Chương 3 P0 hoàn chỉnh | M4 | Chưa làm | — |
+| Hoàn thiện quiz và trang kết quả | ≥10 câu có giải thích; làm lại được | M7 + M8 | Chưa làm | — |
+| Đối chiếu nội dung, trạng thái câu hỏi, test luồng P0; deploy staging | Báo cáo QA nội dung và URL staging | M8 + M9 | Chưa làm | — |
 
-**Checkpoint cuối ngày:** Tất cả P0 hoạt động trên staging, số liệu được kiểm tra; đóng phạm vi tính năng mới.
+**Checkpoint cuối ngày:** Tất cả P0 hoạt động trên staging, số liệu được kiểm tra; chưa bắt đầu P1 nếu chưa qua cổng quyết định.
 
-## Ngày 5 – Kiểm thử và bản phát hành thử
+## Ngày 5 – Hoàn thiện P0; P1 có điều kiện
 
 **Ngày thực tế:** ___ · **Mốc:** MS5 Release Candidate
 
 | Việc cần làm | Đầu ra/điều kiện kiểm tra | Người phụ trách | Trạng thái | PR/minh chứng |
 |---|---|---|---|---|
-| Review, merge, build và kiểm tra deploy | Build không lỗi | — | Chưa làm | — |
-| Polish UI, spacing, typography, responsive | Giao diện đồng nhất | — | Chưa làm | — |
-| Stress test Market Engine và các bất biến | Unit test đạt | — | Chưa làm | — |
-| Kiểm tra biểu đồ và hiệu năng 100 bot | Chương 1 chạy ổn định | — | Chưa làm | — |
-| Thử luồng chương 2, sửa hướng dẫn khó hiểu | Không kẹt luồng | — | Chưa làm | — |
-| Kiểm tra công thức nhà máy và trường hợp biên | Factory Engine ổn định | — | Chưa làm | — |
-| Tối ưu animation nhà máy | Chương 3 chạy ổn định | — | Chưa làm | — |
-| Kiểm tra quiz: điểm, reset, làm lại, kết quả | Không lỗi nghiêm trọng | — | Chưa làm | — |
-| End-to-end thủ công, QA nội dung, tổng hợp và xác nhận bug | Báo cáo test; không còn Critical/High | — | Chưa làm | — |
-| Nếu P0 đã ổn định: chọn tối đa một P1 | localStorage **hoặc** Sandbox đơn giản | — | Chưa làm | — |
+| Review, merge, build và kiểm tra deploy P0 | Build không lỗi | M1 + M9 | Chưa làm | — |
+| Sửa lỗi giao diện/chuyển chương và responsive P0 | Giao diện đồng nhất, không kẹt luồng | M1 + M2 + M4 + M6 | Chưa làm | — |
+| Stress test Market Engine và các bất biến | Unit test đạt | M3 | Chưa làm | — |
+| Kiểm tra công thức nhà máy và trường hợp biên | Factory Engine ổn định | M5 | Chưa làm | — |
+| Kiểm tra quiz: điểm, làm lại, kết quả và ≥10 câu | Không lỗi nghiêm trọng | M7 + M8 | Chưa làm | — |
+| End-to-end, QA nội dung, tổng hợp và xác nhận bug | Báo cáo test; không còn Critical/High | M9 | Chưa làm | — |
+| Chỉ sau khi đạt đủ cổng P0: xem xét P1 | M5/M8: Sandbox; M8: localStorage; thành viên khác: nâng cấp nhỏ nếu không ảnh hưởng release | M5 + M8 + M9 | Chưa làm | Ghi kết quả cổng P0 trước khi bắt đầu |
 
-**Checkpoint cuối ngày:** Có release candidate, danh sách lỗi nhỏ còn lại và người xử lý; không còn lỗi Critical/High.
+**Cổng P1:** Market chạy và test bảo toàn đạt; Factory đủ 8 giờ với c/v/m/G đúng; Labor Power và phân loại hoạt động; Quiz chấm điểm với dữ liệu mẫu; có luồng Landing → kết quả trong một phiên; không còn lỗi nghiêm trọng chặn gameplay. Nếu thiếu một điều kiện, tiếp tục sửa P0. **Checkpoint cuối ngày:** Có release candidate, danh sách lỗi nhỏ còn lại và người xử lý.
 
-## Ngày 6 – Phát hành và thuyết trình
+## Ngày 6 – Regression, phát hành và thuyết trình
 
 **Ngày thực tế:** ___ · **Mốc:** MS6 Final Release
 
@@ -112,6 +110,8 @@
 | Slide, tổng duyệt 7–10 phút, video dự phòng | Slide, video, phân công người nói | — | Chưa làm | — |
 
 **Checkpoint cuối ngày:** Production, GitHub, slide, video dự phòng và người thuyết trình đã sẵn sàng.
+
+**Quy tắc ngày 6:** Không thêm chức năng lớn; chỉ sửa lỗi, kiểm thử lại, triển khai và chuẩn bị demo. P1 chỉ xuất hiện trong bản phát hành nếu đã hoàn thành và không ảnh hưởng P0.
 
 ## Nhật ký cập nhật
 
