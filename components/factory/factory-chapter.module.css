@@ -1,0 +1,75 @@
+.resourceCard { min-height: 330px; padding: 20px; display: flex; flex-direction: column; gap: 10px; background: #e3cda7; }
+.resourceCard strong { font: 700 18px/1.3 Georgia, 'Times New Roman', serif; }
+.resourceCard small { color: #82674d; font-size: 12px; line-height: 1.4; }
+.resourceReady { background: #e0c99f; }
+.resourceIcon { position: relative; display: grid; place-items: center; width: 110px; height: 110px; margin: 6px auto 2px; }
+.resourceIcon img, .resourceIcon span { grid-area: 1 / 1; }
+.resourceIcon span { color: #fff5d9; font-size: 38px; line-height: 1; }
+.resourceCard b { margin-top: auto; color: #974b3b; font: 700 24px Georgia, serif; }
+.resourceStatus { display: block; width: 100%; padding: 8px; border-radius: 4px; background: #76543a; color: #fff5d9; font-size: 11px; font-weight: 800; }
+.statusReady { background: #456d51; }
+.setupFooter { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-top: 22px; padding: 18px; }
+.setupFooter p { margin: 8px 0 0; }
+.setupFooter button { min-width: 270px; }
+.setupWarning { color: #974b3b; font-size: 13px; font-weight: 700; }
+.readyScene { min-height: 400px; text-align: left; }
+.readyScene img { display: block; max-width: 100%; margin: 0 auto; }
+.readyNote { margin-top: 14px; font-weight: 700; }
+.runningGrid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(220px, 1fr); gap: 16px; }
+.productionScene { min-width: 0; padding: 14px; }
+.sceneHeading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.sceneHeading h2 { margin-bottom: 6px; }
+.sceneHeading p { margin: 0 0 12px; }
+.machineStatus { white-space: nowrap; border-radius: 4px; padding: 6px 10px; background: #76543a; color: #fff5d9; font-size: 10px; font-weight: 800; }
+.machineRunning { background: #456d51; }
+.millVisual { display: grid; place-items: center; height: 342px; overflow: hidden; border-radius: 5px; background: #554632; }
+.millVisual img { max-width: 100%; }
+.millRunning img { animation: millPulse 1.4s ease-in-out infinite alternate; }
+@keyframes millPulse { from { filter: brightness(.94); transform: translateY(2px); } to { filter: brightness(1.12); transform: translateY(-2px); } }
+.hotspotRow { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; }
+.hotspotRow button { padding: 6px 10px; border: 1px solid #a9784d; border-radius: 4px; background: #f8e8c2; color: #483121; cursor: pointer; font-size: 11px; font-weight: 800; }
+.hotspotRow button:hover { background: #e3cda7; }
+.metricPanel { padding: 16px; }
+.metricPanel > p { margin: 0 0 12px; }
+.metric { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 13px 0; border-bottom: 1px solid #b98b5f; }
+.metric span { color: #974b3b; font-size: 13px; font-weight: 800; }
+.metric strong { color: #483121; font: 700 20px/1.2 Georgia, serif; text-align: right; }
+.actualValue { margin-top: 16px !important; color: #684d35; font-size: 12px; line-height: 1.4; }
+.inspectPanel { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 14px; }
+.inspectPanel strong { color: #974b3b; }
+.inspectPanel p { margin: 8px 0 0; font-size: 13px; line-height: 1.5; }
+.timelineControls { display: flex; align-items: center; gap: 18px; margin-top: 16px; padding: 12px 14px; }
+.timelineControls strong { white-space: nowrap; color: #974b3b; font-size: 13px; }
+.timelineControls progress { flex: 1; height: 13px; accent-color: #974b3b; }
+.timelineControls button { min-width: 180px; }
+.checkpointGrid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(230px, 1fr); gap: 16px; }
+.checkpointScene { min-width: 0; }
+.checkpointScene img { display: block; max-width: 100%; margin: 0 auto; }
+.checkpointMetrics .metric { display: block; border: 0; padding: 9px 0; }
+.checkpointMetrics .metric span { display: block; margin-bottom: 7px; }
+.checkpointMetrics .metric strong { display: block; text-align: left; }
+.checkpointNote { margin-top: 16px; }
+.questionPanel { min-height: 360px; margin-top: 54px; padding: 32px; text-align: center; }
+.questionPanel h2 { margin-bottom: 6px; }
+.questionPanel p { margin: 7px 0; font-size: 13px; }
+.answerRow { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; margin-top: 55px; }
+.answerRow button { min-width: 250px; padding: 18px 16px; border: 2px solid #a9784d; border-radius: 5px; background: #f8e8c2; color: #483121; cursor: pointer; font-weight: 800; }
+.answerRow button span { margin-right: 8px; font-size: 18px; }
+.answerRow button[aria-pressed='true'] { border-color: #456d51; background: #dce7d2; }
+.answerFeedback { color: #456d51; font-weight: 700; }
+.questionHint { margin-top: 55px !important; color: #82674d; }
+.resultPanel { min-height: 330px; padding: 20px; }
+.resultPanel > p { margin: 6px 0 22px; }
+.resultCard { display: grid; align-content: space-between; min-height: 128px; padding: 18px; border: 1px solid #b98b5f; border-radius: 5px; background: #f4dfb7; }
+.resultCard:nth-child(2) { background: #e6d4ad; }
+.resultCard:nth-child(3) { background: #e6c6b7; }
+.resultCard:nth-child(4) { background: #dce1d0; }
+.resultCard span { color: #974b3b; font-size: 15px; font-weight: 800; }
+.resultCard strong { font: 700 22px/1.2 Georgia, serif; }
+.resultFormula { margin-top: 18px !important; font: 700 18px Georgia, serif; }
+.rewardPanel { margin-top: 18px; }
+.rewardActions { display: flex; justify-content: space-between; gap: 20px; margin-top: 20px; }
+.rewardActions > * { min-width: 210px; }
+@media (max-width: 900px) { .runningGrid, .checkpointGrid { grid-template-columns: 1fr; } .metricPanel { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 18px; } .metricPanel h2, .metricPanel > p, .actualValue { grid-column: 1 / -1; } }
+@media (max-width: 620px) { .setupFooter, .timelineControls, .inspectPanel, .rewardActions { flex-direction: column; align-items: stretch; } .setupFooter button, .timelineControls button, .rewardActions > * { min-width: 0; } .millVisual { height: 270px; } .metricPanel { grid-template-columns: 1fr; } .metricPanel h2, .metricPanel > p, .actualValue { grid-column: auto; } }
+@media (prefers-reduced-motion: reduce) { .millRunning img { animation: none; } }

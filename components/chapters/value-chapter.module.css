@@ -1,0 +1,48 @@
+.theoryCard { display: flex; flex-direction: column; min-height: 325px; padding: 24px; }
+.theoryCard h2 { margin: 0 0 20px; color: #974b3b; font: 700 22px/1.3 Georgia, serif; }
+.theoryCard p { font-size: 14px; line-height: 1.6; }
+.theoryCard strong { margin: auto auto 25px; color: #1f6471; font: 700 30px Georgia, serif; }
+.theoryCard:nth-child(2) strong { color: #456d51; }
+.formulaNote { margin-top: 26px; font-weight: 800; }
+.itemPool { position: relative; min-height: 190px; border-radius: 6px; }
+.poolDropTarget { position: absolute; z-index: 2; inset: 0; display: grid; place-items: center; border: 2px dashed #456d51; border-radius: 6px; background: #f8e8c2e8; color: #456d51; font-size: 14px; font-weight: 800; pointer-events: auto; }
+.emptyPool { margin: 0; min-height: 88px; display: grid; place-items: center; border: 2px dashed #b98b5f; border-radius: 6px; color: #82674d; font-size: 13px; text-align: center; }
+.itemCard { min-height: 190px; display: flex; flex-direction: column; padding: 12px; cursor: grab; }
+.itemCard:active { cursor: grabbing; }
+.itemIcon { position: relative; display: grid; place-items: center; width: 93px; height: 93px; margin: 0 auto 8px; }
+.itemIcon img, .itemIcon span { grid-area: 1 / 1; }
+.itemIcon span { color: #fff5d9; font-size: 35px; line-height: 1; }
+.cardText { display: flex; flex-direction: column; gap: 6px; }
+.cardText strong { font: 700 24px Georgia, serif; }
+.cardText small { color: #974b3b; font-size: 12px; font-weight: 800; }
+.placedCard { min-height: 104px; flex-direction: row; align-items: center; gap: 8px; padding: 5px; background: #f8e8c2; }
+.placedCard .itemIcon { margin: 0; flex: 0 0 93px; }
+.placedCard .cardText strong { font-size: 19px; }
+.placedCard .cardText small { font-size: 10px; }
+.returnButton { margin-top: 12px; padding: 8px 12px; border: 1px solid #a9784d; border-radius: 4px; background: #f8e8c2; color: #483121; cursor: pointer; font-size: 12px; font-weight: 800; }
+.zoneTitle { margin: 30px 0 12px; }
+.zoneGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.zone { display: flex; flex-direction: column; align-items: flex-start; min-height: 150px; gap: 7px; padding: 14px; border: 2px solid #b98b5f; border-radius: 5px; color: #483121; text-align: left; }
+.dropActive { outline: 3px solid #456d51; outline-offset: 2px; box-shadow: 0 0 0 5px #456d5133; }
+.zone > strong { font-size: 13px; }
+.zone > span { font-size: 11px; }
+.placedCards { display: grid; width: 100%; gap: 7px; }
+.zoneTarget { width: 100%; min-height: 36px; margin-top: auto; padding: 7px; border: 1px dashed #a9784d; border-radius: 4px; background: #fff5d966; color: #483121; cursor: pointer; font-size: 11px; font-weight: 800; text-align: left; }
+.zoneTarget:hover, .zoneTarget:focus-visible { background: #fff5d9; outline: 2px solid #456d51; }
+.zoneC { background: #dce1d0; }
+.zoneV { background: #e3d4ae; }
+.zoneM { background: #e7c8b7; }
+.message { margin-top: 18px; }
+.feedbackPanel { margin-top: 30px; padding: 24px; }
+.feedbackPanel > p { font-size: 14px; }
+.wrongItem { padding: 14px 0; border-top: 1px solid #b98b5f; }
+.wrongItem strong { color: #974b3b; }
+.wrongItem p { margin: 7px 0 0; font-size: 14px; line-height: 1.5; }
+.successPanel { margin: 30px 0; padding: 40px 20px; border: 2px solid #b98b5f; border-radius: 6px; background: #e4cfa6; text-align: center; }
+.successPanel p { color: #456d51; font-weight: 800; }
+.successPanel h2 { margin: 12px 0; font: 700 38px Georgia, serif; }
+.successPanel strong { font: 700 26px Georgia, serif; }
+.successCard { min-height: 130px; display: grid; align-content: center; gap: 12px; text-align: center; }
+.successCard strong { font: 700 22px Georgia, serif; }
+.successCard span { color: #974b3b; font-size: 12px; font-weight: 800; }
+@media (max-width: 680px) { .zoneGrid { grid-template-columns: 1fr; } .theoryCard { min-height: 270px; } .successPanel h2 { font-size: 28px; } .successPanel strong { font-size: 20px; } }

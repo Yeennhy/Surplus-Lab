@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "node --test tests/factory.test.mjs tests/chapters.test.mjs",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
