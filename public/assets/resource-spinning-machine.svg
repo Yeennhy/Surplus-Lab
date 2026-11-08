@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 160" role="img" aria-label="Máy kéo sợi với các bánh xe và cuộn chỉ">
+  <ellipse cx="111" cy="145" rx="91" ry="11" fill="#3f4b4d" opacity=".2"/>
+  <path d="M22 122h176v15H22z" fill="#71543d" stroke="#4b3b32" stroke-width="4"/>
+  <path d="M33 37h154v89H33z" fill="#406b74" stroke="#274b56" stroke-width="6"/>
+  <path d="M44 49h128v23H44z" fill="#8eb3a9"/>
+  <circle cx="71" cy="101" r="21" fill="#d8ad6e" stroke="#6e5136" stroke-width="5"/><circle cx="71" cy="101" r="7" fill="#72543e"/>
+  <circle cx="146" cy="101" r="29" fill="#d8ad6e" stroke="#6e5136" stroke-width="5"/><circle cx="146" cy="101" r="10" fill="#72543e"/>
+  <path d="M71 80v42m-21-21h42m54-29v58m-29-29h58" stroke="#a57849" stroke-width="4"/>
+  <path d="M56 17v33m28-33v33m28-33v33m28-33v33m28-33v33" stroke="#f5deaa" stroke-width="4"/>
+  <path d="M49 13h14v16H49zm28 0h14v16H77zm28 0h14v16h-14zm28 0h14v16h-14zm28 0h14v16h-14z" fill="#d1a96e" stroke="#70533d" stroke-width="3"/>
+  <path d="M188 52q16 0 16 14v37" fill="none" stroke="#f6e1b0" stroke-width="5"/>
+</svg>

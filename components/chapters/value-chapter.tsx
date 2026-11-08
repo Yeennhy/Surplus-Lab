@@ -17,6 +17,11 @@ const groups: Array<{ key: ValueGroup; title: string; detail: string }> = [
   { key: "v", title: "TƯ BẢN KHẢ BIẾN", detail: "Tiền mua sức lao động" },
   { key: "m", title: "GIÁ TRỊ THẶNG DƯ", detail: "Phần giá trị mới dôi ra" },
 ];
+const theoryInsights: Record<ValueGroup, { heading: string; description: string }> = {
+  c: { heading: "Giá trị cũ được chuyển vào (c)", description: "Bông 100 USD và hao mòn máy 6 USD đã có giá trị trước ca; chúng chuyển 106 USD vào sợi." },
+  v: { heading: "Giá trị sức lao động (v)", description: "15 USD ứng trước để mua sức lao động. Khi được sử dụng, lao động tạo ra giá trị mới." },
+  m: { heading: "Phần giá trị mới dôi ra (m)", description: "Sau khi bù đắp v, lao động tiếp tục tạo 15 USD thặng dư. m không phải tư bản đã ứng trước." },
+};
 
 export function ValueChapter() {
   const [stage, setStage] = useState<Stage>("theory");
@@ -25,6 +30,7 @@ export function ValueChapter() {
   const [activeDropZone, setActiveDropZone] = useState<ValueGroup | "pool" | null>(null);
   const [draggingFromZone, setDraggingFromZone] = useState(false);
   const [message, setMessage] = useState("");
+  const [theoryFocus, setTheoryFocus] = useState<ValueGroup>("c");
   const evaluation = evaluateValuePlacements(items, placements);
   const availableItems = items.filter((item) => !placements[item.id]);
 
@@ -87,19 +93,24 @@ export function ValueChapter() {
       {stage === "theory" && (
         <>
           <h1 className={`${gameStyles.heading} ${gameStyles.headingCentered}`}>TƯ BẢN BẤT BIẾN VÀ TƯ BẢN KHẢ BIẾN</h1>
-          <p className={`${gameStyles.lede} ${gameStyles.ledeCentered}`}>Giải thích vai trò khác nhau của tư liệu sản xuất và sức lao động.</p>
-          <div className={gameStyles.twoColumns}>
-            <section className={`${gameStyles.panel} ${styles.theoryCard}`}>
-              <h2>c — TƯ BẢN BẤT BIẾN</h2>
-              <p>Giá trị bông và hao mòn máy móc được bảo toàn, chuyển vào sản phẩm; tư liệu sản xuất không tự tạo giá trị mới.</p>
+          <p className={`${gameStyles.lede} ${gameStyles.ledeCentered}`}>Theo dõi 121 USD ứng trước và xem bộ phận nào tạo ra giá trị mới.</p>
+          <div className={`${gameStyles.twoColumns} ${styles.theoryGrid}`}>
+            <section className={`${gameStyles.panel} ${styles.theoryCard} ${styles.theoryConstant}`}>
+              <div className={styles.theoryCardTop}><span className={styles.theorySymbol}>c</span><span>GIÁ TRỊ CŨ · CHUYỂN VÀO SỢI</span></div>
+              <h2>TƯ BẢN BẤT BIẾN</h2>
+              <p>Bông nguyên liệu và hao mòn máy <mark>chuyển giá trị có sẵn</mark> vào sản phẩm. Bản thân tư liệu sản xuất không tạo giá trị mới.</p>
+              <div className={styles.theoryDetail}><span>BÔNG <b>100 USD</b></span><span>＋</span><span>HAO MÒN MÁY <b>6 USD</b></span></div>
               <strong>c = {result.constantCapital} USD</strong>
             </section>
-            <section className={`${gameStyles.panel} ${styles.theoryCard}`}>
-              <h2>v — TƯ BẢN KHẢ BIẾN</h2>
-              <p>Bộ phận tư bản mua sức lao động. Khi được sử dụng, lao động tạo giá trị mới lớn hơn giá trị sức lao động.</p>
+            <section className={`${gameStyles.panel} ${styles.theoryCard} ${styles.theoryVariable}`}>
+              <div className={styles.theoryCardTop}><span className={styles.theorySymbol}>v</span><span>SỨC LAO ĐỘNG · TẠO GIÁ TRỊ MỚI</span></div>
+              <h2>TƯ BẢN KHẢ BIẾN</h2>
+              <p>15 USD mua sức lao động. Trong 8 giờ, lao động tạo <mark>30 USD giá trị mới</mark>: 15 USD bù v và 15 USD thành m.</p>
+              <div className={styles.theoryDetail}><span>BÙ ĐẮP v <b>15 USD</b></span><span>＋</span><span>THẶNG DƯ m <b>15 USD</b></span></div>
               <strong>v = {result.variableCapital} USD</strong>
             </section>
           </div>
+          <div className={styles.formulaWorkbench}><div className={styles.formulaWorkbenchHeader}><span>CHẠM VÀO TỪNG PHẦN ĐỂ ĐỌC DÒNG GIÁ TRỊ</span><strong>G = c + (v + m)</strong></div><div className={styles.formulaParts}><button type="button" aria-pressed={theoryFocus === "c"} onClick={() => setTheoryFocus("c")}><small>GIÁ TRỊ CŨ (c)</small><b>c = {result.constantCapital} USD</b></button><span aria-hidden="true">＋</span><button type="button" aria-pressed={theoryFocus === "v"} onClick={() => setTheoryFocus("v")}><small>BÙ ĐẮP LAO ĐỘNG (v)</small><b>v = {result.variableCapital} USD</b></button><span aria-hidden="true">＋</span><button type="button" aria-pressed={theoryFocus === "m"} onClick={() => setTheoryFocus("m")}><small>PHẦN DÔI RA (m)</small><b>m = {result.surplusValue} USD</b></button></div><div className={styles.formulaInsight} aria-live="polite"><span aria-hidden="true">✦</span><div><strong>{theoryInsights[theoryFocus].heading}</strong><p>{theoryInsights[theoryFocus].description}</p></div></div></div>
           <div className={gameStyles.buttonRow}>
             <button className={gameStyles.button} type="button" onClick={() => setStage("classify")}>MỞ TRÒ CHƠI PHÂN LOẠI →</button>
           </div>
@@ -133,6 +144,7 @@ export function ValueChapter() {
           <div className={styles.zoneGrid}>
             {groups.map((group) => {
               const placedItems = items.filter((item) => placements[item.id] === group.key);
+              const placedValue = placedItems.reduce((total, item) => total + item.amount, 0);
               return (
                 <div
                   key={group.key}
@@ -144,8 +156,8 @@ export function ValueChapter() {
                   role="group"
                   aria-label={`${group.key} — ${group.title}`}
                 >
-                  <strong>{group.key} · {group.title}</strong>
-                  <span>{group.detail}</span>
+                  <div className={styles.zoneHeader}><span className={styles.zoneSymbol}>{group.key}</span><div><small>KHU VỰC {group.key.toUpperCase()}</small><strong>{group.title}</strong><span>{group.detail}</span></div></div>
+                  <div className={styles.zoneSummary}><span>{placedItems.length} THẺ ĐÃ ĐẶT</span><b>{placedValue} USD</b></div>
                   <div className={styles.placedCards}>
                     {placedItems.map((item) => (
                       <ValueCard key={item.id} item={item} compact selected={selectedItem === item.id} onSelect={setSelectedItem} onDragStart={() => setDraggingFromZone(true)} onDragEnd={() => { setActiveDropZone(null); setDraggingFromZone(false); }} />
@@ -157,7 +169,7 @@ export function ValueChapter() {
                     onClick={() => selectedItem && place(selectedItem, group.key)}
                     aria-label={`${group.key} — ${group.title}; ${selectedItem ? `đặt ${items.find((item) => item.id === selectedItem)?.label}` : "chọn thẻ trước"}`}
                   >
-                    {selectedItem ? `＋ ĐẶT THẺ VÀO ${group.key}` : "＋ THẢ THẺ VÀO ĐÂY"}
+                    {selectedItem ? `＋ ĐẶT THẺ VÀO ${group.key.toUpperCase()}` : `＋ THẢ THẺ VÀO VÙNG ${group.key.toUpperCase()}`}
                   </button>
                 </div>
               );
@@ -195,16 +207,18 @@ export function ValueChapter() {
         <>
           <h1 className={`${gameStyles.heading} ${gameStyles.headingCentered}`}>MẬT MÃ GIÁ TRỊ ĐÃ ĐƯỢC GIẢI</h1>
           <div className={styles.successPanel}>
-            <p>✓ THÀNH CÔNG</p>
+            <span className={styles.successMedal} aria-hidden="true">✦</span>
+            <p>✓ BẠN ĐÃ PHÂN LOẠI ĐÚNG CẢ BỐN THẺ</p>
             <h2>G = c + (v + m)</h2>
-            <strong>{result.productValue} = {result.constantCapital} + ({result.variableCapital} + {result.surplusValue})</strong>
+            <div className={styles.successEquation}><span><small>GIÁ TRỊ SẢN PHẨM</small><b>{result.productValue} USD</b></span><span aria-hidden="true">=</span><span><small>GIÁ TRỊ CŨ</small><b>{result.constantCapital}</b></span><span aria-hidden="true">＋</span><span><small>GIÁ TRỊ MỚI</small><b>{result.variableCapital} + {result.surplusValue}</b></span></div>
+            <div className={styles.valueBar} aria-label={`c ${result.constantCapital} USD, v ${result.variableCapital} USD, m ${result.surplusValue} USD`}><span style={{ width: `${result.constantCapital / result.productValue * 100}%` }}>c</span><span style={{ width: `${result.variableCapital / result.productValue * 100}%` }}>v</span><span style={{ width: `${result.surplusValue / result.productValue * 100}%` }}>m</span></div>
           </div>
           <div className={gameStyles.cardGrid}>
-            <div className={`${gameStyles.panel} ${styles.successCard}`}><strong>c = {result.constantCapital} USD</strong><span>GIÁ TRỊ CŨ</span></div>
-            <div className={`${gameStyles.panel} ${styles.successCard}`}><strong>v = {result.variableCapital} USD</strong><span>SỨC LAO ĐỘNG</span></div>
-            <div className={`${gameStyles.panel} ${styles.successCard}`}><strong>m = {result.surplusValue} USD</strong><span>GIÁ TRỊ THẶNG DƯ</span></div>
+            <div className={`${gameStyles.panel} ${styles.successCard}`}><span className={styles.successCardIcon}>◈</span><small>GIÁ TRỊ CŨ CHUYỂN VÀO</small><strong>c = {result.constantCapital} USD</strong><span>Bông + hao mòn máy</span></div>
+            <div className={`${gameStyles.panel} ${styles.successCard}`}><span className={styles.successCardIcon}>✧</span><small>GIÁ TRỊ SỨC LAO ĐỘNG</small><strong>v = {result.variableCapital} USD</strong><span>Bốn giờ đầu bù đắp v</span></div>
+            <div className={`${gameStyles.panel} ${styles.successCard}`}><span className={styles.successCardIcon}>✦</span><small>GIÁ TRỊ THẶNG DƯ MỚI</small><strong>m = {result.surplusValue} USD</strong><span>Bốn giờ sau tạo ra m</span></div>
           </div>
-          <p className={`${gameStyles.note} ${styles.formulaNote}`}>m là giá trị mới do lao động thặng dư tạo ra, không phải một loại tư bản đã ứng trước.</p>
+          <details className={styles.successTakeaway} open><summary><span className={styles.takeawayIcon} aria-hidden="true">✦</span><span><small>GHI NHỚ SAU KHI GIẢI MẬT MÃ</small><strong>GIÁ TRỊ THẶNG DƯ ĐẾN TỪ ĐÂU?</strong></span><span aria-hidden="true">⌄</span></summary><div className={styles.takeawayBody}><div><small>LAO ĐỘNG TẠO MỚI</small><b>30 USD</b></div><span aria-hidden="true">−</span><div><small>BÙ ĐẮP v</small><b>15 USD</b></div><span aria-hidden="true">=</span><div><small>GIÁ TRỊ THẶNG DƯ m</small><b>15 USD</b></div></div><p>m là phần giá trị mới do lao động thặng dư tạo ra. Nó <b>không nằm trong 121 USD tư bản ứng trước</b>.</p></details>
           <div className={gameStyles.buttonRow}>
             <Link className={gameStyles.button} href="/challenge">BƯỚC VÀO THỬ THÁCH CUỐI →</Link>
           </div>
@@ -232,14 +246,14 @@ function ValueCard({ item, compact = false, selected, onSelect, onDragStart, onD
         event.dataTransfer.setData("text/plain", item.id);
         event.dataTransfer.effectAllowed = "move";
         const icon = event.currentTarget.querySelector("img");
-        if (icon) event.dataTransfer.setDragImage(icon, 46, 46);
+        if (icon) event.dataTransfer.setDragImage(icon, 60, 48);
       }}
       onDragEnd={onDragEnd}
       aria-pressed={selected}
       className={`${gameStyles.cardButton} ${styles.itemCard} ${compact ? styles.placedCard : ""} ${selected ? gameStyles.selected : ""}`}
       onClick={() => onSelect(item.id)}
     >
-      <span className={styles.itemIcon}><Image src={item.asset} alt="" width={93} height={93} /><span aria-hidden="true">{item.glyph}</span></span>
+      <span className={styles.itemIcon}><Image src={item.asset} alt="" width={150} height={108} /></span>
       <span className={styles.cardText}><strong>{item.amount} USD</strong><small>{item.label.toUpperCase()}</small></span>
     </button>
   );

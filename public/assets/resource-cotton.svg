@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 160" role="img" aria-label="Kiện bông nguyên liệu">
+  <ellipse cx="110" cy="145" rx="89" ry="12" fill="#6a503a" opacity=".2"/>
+  <path d="M31 86h155l16 49H20z" fill="#b78956" stroke="#765638" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M35 88l14 45m22-46 6 46m31-45v45m33-45-5 45m32-45-11 45" stroke="#8b6544" stroke-width="5"/>
+  <path d="M41 88c-13-17-8-38 12-40 6-18 31-22 43-9 15-18 44-15 52 2 24-9 43 7 41 29 0 9-4 14-9 18z" fill="#fff8df" stroke="#b5aa8e" stroke-width="5"/>
+  <path d="M81 84c-12-10-12-25-5-33m34 33c-6-13-4-25 5-36m33 36c9-10 12-19 9-30" fill="none" stroke="#ded6bc" stroke-width="4" stroke-linecap="round"/>
+  <path d="M37 103h147" stroke="#ebd1a4" stroke-width="6"/><path d="M49 126h124" stroke="#e2bf86" stroke-width="5"/>
+  <path d="M177 47q10-23 19-27m-21 24q-15-11-17-24" stroke="#55745d" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M192 20q10 2 10 13-10 1-14-7m-31-6q-11-2-15 7 10 5 17 0" fill="#80a477"/>
+</svg>
