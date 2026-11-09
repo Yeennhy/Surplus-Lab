@@ -18,3 +18,6 @@ export type {
   FactorySetup,
   FactorySnapshot,
 } from "./types";
+
+export { diagnoseLine, getShiftLedger, simulateBatch, validateBatchPlan } from "./gameplay";
+export type { BatchIssue, BatchIssueCode, BatchLedger, BatchPlan, LineConfiguration, LineStation, ProductionEvent, ProductionEventType, ShiftLedger } from "./gameplay";

@@ -56,3 +56,37 @@ export const LABOR_POWER_VALUE_PARTS = [
   "Chi phí đào tạo, học tập và hình thành kỹ năng nghề nghiệp",
   "Tư liệu sinh hoạt cần thiết để nuôi con của người lao động",
 ] as const;
+
+export type LaborCondition = "freeToSellLabor" | "lacksProductionMeans";
+export type EvidenceGrid = Partial<Record<LaborScenario["id"], Partial<Record<LaborCondition, boolean>>>>;
+
+export function evaluateEvidenceGrid(grid: EvidenceGrid) {
+  const missing: Array<{ id: LaborScenario["id"]; condition: LaborCondition }> = [];
+  const wrong: Array<{ id: LaborScenario["id"]; condition: LaborCondition }> = [];
+  for (const scenario of LABOR_SCENARIOS) {
+    for (const condition of ["freeToSellLabor", "lacksProductionMeans"] as const) {
+      const answer = grid[scenario.id]?.[condition];
+      if (answer === undefined) missing.push({ id: scenario.id, condition });
+      else if (answer !== scenario[condition]) wrong.push({ id: scenario.id, condition });
+    }
+  }
+  return { complete: missing.length === 0, correct: missing.length === 0 && wrong.length === 0, missing, wrong };
+}
+
+export type LaborValuePiece = "living" | "training" | "children" | "cotton" | "machine";
+export const LABOR_VALUE_PIECES: ReadonlyArray<{ id: LaborValuePiece; label: string; explanation: string }> = [
+  { id: "living", label: "Sinh hoạt cần thiết", explanation: "Duy trì và tái sản xuất sức lao động." },
+  { id: "training", label: "Học tập, đào tạo", explanation: "Hình thành kỹ năng làm việc." },
+  { id: "children", label: "Nuôi con của người lao động", explanation: "Tái sản xuất thế hệ lao động tiếp theo." },
+  { id: "cotton", label: "Bông nguyên liệu", explanation: "Vật liệu cần thiết cho quy trình kéo sợi." },
+  { id: "machine", label: "Máy kéo sợi", explanation: "Thiết bị vận hành trong dây chuyền sản xuất." },
+];
+
+export function evaluateLaborValueFile(pieces: readonly LaborValuePiece[]) {
+  const required: LaborValuePiece[] = ["living", "training", "children"];
+  return {
+    correct: required.every((id) => pieces.includes(id)) && pieces.length === required.length,
+    missing: required.filter((id) => !pieces.includes(id)),
+    decoys: pieces.filter((id) => !required.includes(id)),
+  };
+}

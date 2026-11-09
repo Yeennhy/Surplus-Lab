@@ -18,8 +18,8 @@ export function GameShell({ chapter, children, progress }: GameShellProps) {
         </Link>
         <div className={styles.statuses} aria-label="Trạng thái nhiệm vụ">
           <span>NHIỆM VỤ {chapter}</span>
-          <span>TƯ BẢN 121 USD</span>
-          {chapter === 3 ? <span>TIẾN ĐỘ CA · {Math.round(progress ?? 0)}%</span> : <span>HUY HIỆU 02</span>}
+          <span>{chapter === 2 ? "HỒ SƠ SỨC LAO ĐỘNG" : "VỐN ỨNG TRƯỚC 121 USD"}</span>
+          {chapter === 3 ? <span>TIẾN ĐỘ CA · {Math.round(progress ?? 0)}%</span> : <span>{chapter === 2 ? "HỢP ĐỒNG 8 GIỜ" : "KIỂM TOÁN HAI MẺ SỢI"}</span>}
         </div>
         <details className={styles.journal}>
           <summary>☰ NHẬT KÝ</summary>

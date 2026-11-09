@@ -30,7 +30,9 @@ then resume after the answer. The engine does not advance time automatically.
 | Hour | c transferred | New value | v reproduced | m | Produced G | Capital committed for shift |
 |---:|---:|---:|---:|---:|---:|---:|
 | 0 | 0 | 0 | 0 | 0 | 0 | 121 |
+| 2 | 26.5 | 7.5 | 7.5 | 0 | 34 | 121 |
 | 4 | 53 | 15 | 15 | 0 | 68 | 121 |
+| 6 | 79.5 | 22.5 | 15 | 7.5 | 102 | 121 |
 | 8 | 106 | 30 | 15 | 15 | 136 | 121 |
 
 `capitalAdvancedTotal` is the 121 USD committed to the entire shift; it is not
@@ -46,6 +48,48 @@ The engine exposes that **illustration** as `illustrativeFullInputValue`; the
 value of output actually produced through hour six is `productValue = 102`.
 These values need distinct UI labels. The exact 4-hour and 8-hour checkpoints
 come from the project module contract and textbook extract.
+
+## Gameplay API for chapters 2–4
+
+`gameplay.ts` adds pure rules on top of the existing snapshot engine:
+
+```ts
+import {
+  diagnoseLine,
+  getShiftLedger,
+  simulateBatch,
+  validateBatchPlan,
+} from "@/features/factory";
+
+const first = { cotton: 50, depreciation: 3, laborCharge: 15 };
+const second = { cotton: 50, depreciation: 3, laborCharge: 0 };
+const line = {
+  openedCotton: true,
+  fiberToRollers: true,
+  rollersToWorker: true,
+  workerToSpool: true,
+};
+
+validateBatchPlan(first, 1);  // []
+validateBatchPlan(second, 2); // [] — same eight-hour contract
+diagnoseLine(line);           // null when material can reach the spool
+simulateBatch(first, line, 1); // ordered physical events for UI feedback
+getShiftLedger();             // two 68 USD batches; c106/v15/m15/G136
+```
+
+`simulateBatch` emits an ordered trace of allocation, fiber splitting, machine
+spinning, worker processing and winding. On a bad connection it stops at the
+first blocked station; on a bad invoice it returns `INVOICE_REJECTED`. The UI
+does not advance the factory clock until the first invoice and trial run pass.
+The second invoice requires new cotton and machine depreciation but rejects a
+second labor-power charge. The hour-two and hour-six investigations are optional;
+their figures are interpolations, while the 4/8-hour checkpoints are exact.
+
+The client stores a versioned labor contract and shift ledger in
+`features/progress/artifacts.ts`. Chapter 4 reads that ledger and falls back to
+the same textbook data when opened directly. Each route also stores a local
+draft so refresh can resume the active puzzle. Local storage is optional: when
+unavailable, the game still runs for the current page session.
 
 The matching Figma frames are setup `55:7339`/`63:11317`, hour zero
 `55:7695`, checkpoint `44:3500`/`57:8223`/`63:12064`, hour eight

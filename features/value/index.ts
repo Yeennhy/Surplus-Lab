@@ -75,3 +75,43 @@ export function evaluateValuePlacements(
     missingItems,
   };
 }
+
+export type ValueEvidenceId = "batches" | "machine-invoice" | "contract" | "second-half";
+export const VALUE_EVIDENCE: ReadonlyArray<{ id: ValueEvidenceId; title: string; detail: string }> = [
+  { id: "batches", title: "Hai phiếu bông", detail: "50 + 50 USD bông đi vào hai mẻ." },
+  { id: "machine-invoice", title: "Sổ hao mòn máy", detail: "3 + 3 USD giá trị cũ chuyển vào sợi." },
+  { id: "contract", title: "Hợp đồng 8 giờ", detail: "15 USD mua sức lao động một lần cho cả ca." },
+  { id: "second-half", title: "Mốc giờ 4–8", detail: "15 USD mới tiếp tục hình thành sau khi v đã được bù." },
+];
+export const ITEM_EVIDENCE: Readonly<Record<ValueItemId, ValueEvidenceId>> = {
+  cotton: "batches", machine: "machine-invoice", labor: "contract", surplus: "second-half",
+};
+
+export function evaluateValueEvidence(answers: Partial<Record<ValueItemId, ValueEvidenceId>>) {
+  const wrong = (Object.keys(ITEM_EVIDENCE) as ValueItemId[]).filter((id) => answers[id] !== ITEM_EVIDENCE[id]);
+  return { correct: wrong.length === 0, wrong };
+}
+
+export function calculatePlacedLedger(items: readonly ValueItem[], placements: ValuePlacements) {
+  const totals: Record<ValueGroup, number> = { c: 0, v: 0, m: 0 };
+  for (const item of items) {
+    const group = placements[item.id];
+    if (group) totals[group] += item.amount;
+  }
+  return { ...totals, capitalAdvanced: totals.c + totals.v, productValue: totals.c + totals.v + totals.m };
+}
+
+export type AuditClaimId = "machine" | "wage" | "advance";
+export const AUDIT_CLAIM_EVIDENCE: Readonly<Record<AuditClaimId, ValueEvidenceId>> = {
+  machine: "machine-invoice", wage: "contract", advance: "second-half",
+};
+export function evaluateAuditEvidence(answers: Partial<Record<AuditClaimId, ValueEvidenceId>>) {
+  const wrong = (Object.keys(AUDIT_CLAIM_EVIDENCE) as AuditClaimId[]).filter((id) => answers[id] !== AUDIT_CLAIM_EVIDENCE[id]);
+  return { correct: wrong.length === 0, wrong };
+}
+
+export type ProofStep = "old-transfer" | "new-labor" | "surplus-after-v";
+export function evaluateProofChain(steps: readonly ProofStep[]) {
+  const expected: ProofStep[] = ["old-transfer", "new-labor", "surplus-after-v"];
+  return { correct: steps.length === 3 && steps.every((step, index) => step === expected[index]), expected };
+}

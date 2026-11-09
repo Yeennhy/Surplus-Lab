@@ -2,143 +2,349 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GameShell, gameStyles } from "./game-shell";
-import { LABOR_POWER_VALUE_PARTS, LABOR_SCENARIOS, evaluateLaborScenario } from "@/features/labor";
+import {
+  LABOR_SCENARIOS, LABOR_VALUE_PIECES, evaluateEvidenceGrid, evaluateLaborScenario, evaluateLaborValueFile,
+  type EvidenceGrid, type LaborCondition, type LaborScenario, type LaborValuePiece,
+} from "@/features/labor";
+import { readChapterDraft, saveChapterArtifacts, saveChapterDraft } from "@/features/progress/artifacts";
 import { emitChapterCompleted } from "@/features/progress/events";
-import styles from "./labor-chapter.module.css";
+import styles from "./labor-game.module.css";
 
-type Stage = "select" | "feedback" | "conditions" | "properties";
-const scenarioArt = {
-  a: "/assets/labor-independent.svg",
-  b: "/assets/labor-wage-worker.svg",
-  c: "/assets/labor-unfree.svg",
-} as const;
+type Stage = "investigate" | "value" | "contract" | "complete";
+type CandidateId = LaborScenario["id"];
+const art: Record<CandidateId, string> = {
+  a: "/assets/labor-independent.svg", b: "/assets/labor-wage-worker.svg", c: "/assets/labor-unfree.svg",
+};
+const candidateIcons: Record<CandidateId, string> = {
+  a: "🏠", b: "👷", c: "🔗",
+};
+const stories: Record<CandidateId, { intro: string; freedom: string; means: string }> = {
+  a: { intro: "Một người đang tự tổ chức việc sản xuất của mình.", freedom: "Tự quyết định nhận hay không nhận việc làm thuê.", means: "Có xưởng và công cụ đủ để tự sản xuất." },
+  b: { intro: "Một người muốn nhận công việc trong xưởng sợi.", freedom: "Có quyền tự ký hợp đồng bán sức lao động.", means: "Không có đủ tư liệu để tự tổ chức sản xuất." },
+  c: { intro: "Một người đang bị ràng buộc quyền quyết định việc làm.", freedom: "Không được tự mình quyết định bán sức lao động.", means: "Không có tư liệu sản xuất cần thiết." },
+};
+const conditions: Array<{ id: LaborCondition; short: string; description: string }> = [
+  { id: "freeToSellLabor", short: "TỰ DO", description: "Có quyền tự bán sức lao động?" },
+  { id: "lacksProductionMeans", short: "THIẾU TƯ LIỆU", description: "Không đủ tư liệu tự sản xuất?" },
+];
+const conditionLabels: Record<LaborCondition, string> = {
+  freeToSellLabor: "Tự do?",
+  lacksProductionMeans: "Thiếu tư liệu?",
+};
 
-export function LaborChapter() {
-  const [stage, setStage] = useState<Stage>("select");
-  const [selectedId, setSelectedId] = useState<(typeof LABOR_SCENARIOS)[number]["id"] | null>(null);
-  const [showHint, setShowHint] = useState(false);
-  const selected = LABOR_SCENARIOS.find((scenario) => scenario.id === selectedId);
-  const evaluation = selected ? evaluateLaborScenario(selected) : null;
+const CONFETTI_COLORS = ["#e6bf78", "#4b7956", "#a45a3f", "#9fc4bc", "#d3a14e", "#8e3f35", "#f7e8c3", "#3d6653"];
 
-  function confirmSelection() {
-    if (!selected || !evaluation) return;
-    setStage(evaluation.qualifies ? "conditions" : "feedback");
-  }
-
-  return (
-    <GameShell chapter={2}>
-      {stage === "select" && (
-        <>
-          <h1 className={`${gameStyles.heading} ${gameStyles.headingCentered}`}>HÀNG HÓA ĐẶC BIỆT</h1>
-          <p className={`${gameStyles.lede} ${gameStyles.ledeCentered}`}>
-            Tìm người đáp ứng cả hai điều kiện để sức lao động trở thành hàng hóa.
-          </p>
-          <div className={gameStyles.cardGrid}>
-            {LABOR_SCENARIOS.map((scenario) => (
-              <button
-                className={`${gameStyles.cardButton} ${styles.personCard} ${selectedId === scenario.id ? gameStyles.selected : ""}`}
-                key={scenario.id}
-                type="button"
-                aria-pressed={selectedId === scenario.id}
-                onClick={() => setSelectedId(scenario.id)}
-              >
-                <span className={styles.portraitFrame}>
-                  <Image className={styles.personImage} src={scenarioArt[scenario.id]} alt="" width={240} height={190} />
-                  <span className={styles.personNumber}>HỒ SƠ {scenario.id.toUpperCase()}</span>
-                </span>
-                <strong>{scenario.title}</strong>
-                <span className={styles.personDescription}>{scenario.description}</span>
-                <span className={styles.personAction}>{selectedId === scenario.id ? "✓ ĐÃ CHỌN ĐỂ ĐIỀU TRA" : "CHẠM ĐỂ ĐIỀU TRA →"}</span>
-              </button>
-            ))}
-          </div>
-          {showHint && <aside className={styles.hint} role="note"><span className={styles.bulbIcon} aria-hidden="true"><Image src="/assets/hint-lightbulb.svg" alt="" width={47} height={47} /></span><div><strong>MANH MỐI TỪ NGỌN ĐÈN</strong><p>Hãy kiểm tra <b>cả hai</b> ô: người đó có quyền tự quyết việc làm, và không có đủ tư liệu để tự sản xuất.</p></div></aside>}
-          <div className={gameStyles.buttonRow}>
-            <button className={gameStyles.button} type="button" disabled={!selectedId} onClick={confirmSelection}>
-              XÁC NHẬN LỰA CHỌN
-            </button>
-            <button className={`${gameStyles.button} ${gameStyles.buttonBrown}`} type="button" onClick={() => setShowHint((value) => !value)}>
-              {showHint ? "ẨN GỢI Ý" : "XEM GỢI Ý"}
-            </button>
-          </div>
-        </>
-      )}
-
-      {stage === "feedback" && evaluation && selected && (
-        <>
-          <h1 className={gameStyles.heading}>ĐIỀU TRA NHÂN VẬT</h1>
-          <p className={gameStyles.lede}>Phản hồi sau khi lựa chọn nhân vật chưa đủ điều kiện trở thành người bán sức lao động.</p>
-          <section className={`${gameStyles.panel} ${styles.feedbackPanel}`} aria-live="polite">
-            <h2 className={`${gameStyles.sectionTitle} ${gameStyles.error}`}>LỰA CHỌN CHƯA PHÙ HỢP</h2>
-            <div className={styles.feedbackPerson}><Image src={scenarioArt[selected.id]} alt="" width={100} height={80} /><p>Hồ sơ đang xét<br /><strong>{selected.title}</strong></p></div>
-            <div className={gameStyles.twoColumns}>
-              <ConditionCard index="I" title="TỰ DO VỀ THÂN THỂ" met={evaluation.firstConditionMet} description="Có quyền tự quyết định bán sức lao động." />
-              <ConditionCard index="II" title="THIẾU TƯ LIỆU SẢN XUẤT" met={evaluation.secondConditionMet} description="Không có đủ tư liệu để tự tổ chức sản xuất." />
-            </div>
-            <p className={styles.explanation}>{evaluation.explanation}</p>
-          </section>
-          <div className={gameStyles.buttonRow}>
-            <button className={gameStyles.button} type="button" onClick={() => { setSelectedId(null); setStage("select"); }}>CHỌN LẠI NHÂN VẬT</button>
-            <button className={`${gameStyles.button} ${gameStyles.buttonBrown}`} type="button" onClick={() => { setShowHint(true); setStage("select"); }}>XEM GỢI Ý</button>
-          </div>
-        </>
-      )}
-
-      {stage === "conditions" && evaluation && (
-        <>
-          <div className={styles.investigationHeader}><span className={styles.investigationSeal}>02/02</span><div><h1 className={gameStyles.heading}>ĐIỀU TRA SỨC LAO ĐỘNG</h1><p>Hai bằng chứng cùng xuất hiện ở người lao động làm thuê.</p></div></div>
-          <div className={styles.investigationLead}><Image src={scenarioArt.b} alt="Người công nhân làm thuê" width={140} height={111} /><div><span>NHÂN VẬT ĐÃ XÁC MINH</span><strong>Người lao động làm thuê</strong><p>Tự do về thân thể nhưng thiếu tư liệu sản xuất: sức lao động có thể trở thành hàng hóa.</p></div></div>
-          <div className={`${gameStyles.twoColumns} ${styles.conditionGrid}`}>
-            <ConditionCard index="I" title="TỰ DO VỀ THÂN THỂ" met description="Có quyền bán sức lao động và thỏa thuận việc làm." />
-            <ConditionCard index="II" title="THIẾU TƯ LIỆU SẢN XUẤT" met description="Cần bán sức lao động để sinh sống." />
-          </div>
-          <p className={styles.investigationConclusion}><span aria-hidden="true">✦</span><strong>KẾT LUẬN:</strong> Khi được sử dụng, sức lao động có thể tạo ra giá trị mới <b>lớn hơn giá trị của chính nó</b>.</p>
-          <div className={gameStyles.buttonRow}>
-            <button className={gameStyles.button} type="button" onClick={() => setStage("properties")}>TÌM HIỂU HAI THUỘC TÍNH →</button>
-          </div>
-        </>
-      )}
-
-      {stage === "properties" && (
-        <>
-          <h1 className={`${gameStyles.heading} ${gameStyles.headingCentered}`}>VÌ SAO SỨC LAO ĐỘNG ĐẶC BIỆT?</h1>
-          <p className={`${gameStyles.lede} ${gameStyles.ledeCentered}`}>Một hàng hóa, hai mặt cần phân biệt. Theo dõi dòng giá trị trong một ca kéo sợi.</p>
-          <div className={`${gameStyles.twoColumns} ${styles.propertyGrid}`}>
-            <section className={`${gameStyles.panel} ${styles.propertyCard} ${styles.propertyValue}`}>
-              <div className={styles.propertyTop}><span className={styles.propertyIndex}>01 · GIÁ TRỊ</span><span className={styles.propertySymbol}>v</span></div>
-              <h2>GIÁ TRỊ CỦA SỨC LAO ĐỘNG</h2>
-              <p>Được quyết định bởi giá trị tư liệu cần thiết để <mark>duy trì và tái sản xuất</mark> sức lao động:</p>
-              <ol>{LABOR_POWER_VALUE_PARTS.map((part) => <li key={part}>{part}</li>)}</ol>
-              <div className={styles.propertyEquation}>Trong ca sợi <strong>v = 15 USD</strong></div>
-            </section>
-            <section className={`${gameStyles.panel} ${styles.propertyCard} ${styles.propertyUse}`}>
-              <div className={styles.propertyTop}><span className={styles.propertyIndex}>02 · GIÁ TRỊ SỬ DỤNG</span><span className={styles.propertySymbol}>v + m</span></div>
-              <h2>KHẢ NĂNG TẠO GIÁ TRỊ MỚI</h2>
-              <p>Khi được sử dụng trong sản xuất, lao động tạo ra <mark>giá trị mới lớn hơn v</mark>.</p>
-              <div className={styles.valueFlow}><span><small>4 GIỜ ĐẦU</small><b>15 USD</b><em>Bù đắp v</em></span><span aria-hidden="true">＋</span><span><small>4 GIỜ SAU</small><b>15 USD</b><em>Thặng dư m</em></span></div>
-              <div className={styles.propertyEquation}>Giá trị mới <strong>v + m = 30 USD</strong></div>
-            </section>
-          </div>
-          <p className={styles.propertyTakeaway}><span aria-hidden="true">✦</span><span><strong>ĐIỂM ĐẶC BIỆT</strong> Giá trị sử dụng của sức lao động là nguồn tạo ra giá trị mới; phần vượt quá v trở thành m.</span></p>
-          <div className={gameStyles.buttonRow}>
-            <Link className={`${gameStyles.button} ${styles.journeyButton}`} href="/learn/chapter-3" onClick={() => emitChapterCompleted(2)}><span className={styles.truckIcon} aria-hidden="true"><svg viewBox="0 0 54 32" fill="none"><path d="M3 7h29v19H3zM32 13h10l8 8v5H32z" fill="#e6bf78" stroke="#fff4d6" strokeWidth="2"/><path d="M36 15h5l5 5H36z" fill="#9fc4bc"/><circle cx="13" cy="27" r="4" fill="#443225" stroke="#fff4d6" strokeWidth="2"/><circle cx="41" cy="27" r="4" fill="#443225" stroke="#fff4d6" strokeWidth="2"/></svg></span>ĐẾN NHÀ MÁY <span aria-hidden="true">→</span></Link>
-          </div>
-        </>
-      )}
-    </GameShell>
-  );
+function ConfettiEffect() {
+  const particles = Array.from({ length: 24 }, (_, i) => ({
+    id: i,
+    left: `${(i * 37 + 11) % 97}%`,
+    delay: `${(i % 8) * 0.18}s`,
+    duration: `${1.5 + (i % 5) * 0.35}s`,
+    color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+    size: 5 + i % 6,
+  }));
+  return <div className={styles.confettiContainer}>{particles.map(p => (
+    <div key={p.id} className={styles.confetti} style={{ left: p.left, animationDelay: p.delay, animationDuration: p.duration, backgroundColor: p.color, width: p.size, height: p.size }} />
+  ))}</div>;
 }
 
-function ConditionCard({ index, title, met, description }: { index: string; title: string; met: boolean; description: string }) {
-  return (
-    <div className={`${gameStyles.panel} ${styles.conditionCard} ${met ? styles.conditionMet : styles.conditionMissing}`}>
-      <div className={styles.conditionNumber}>{index === "I" ? "✦" : "▥"}</div>
-      <span className={styles.conditionIndex}>ĐIỀU KIỆN {index}</span>
-      <h3>{title}</h3>
-      <p>{description}</p>
-      <strong className={met ? gameStyles.success : gameStyles.error}>{met ? "✓ ĐẠT" : "× CHƯA ĐẠT"}</strong>
-    </div>
-  );
+export function LaborChapter() {
+  const [stage, setStage] = useState<Stage>("investigate");
+  const [active, setActive] = useState<CandidateId>("a");
+  const [inspected, setInspected] = useState<CandidateId[]>([]);
+  const [grid, setGrid] = useState<EvidenceGrid>({});
+  const [nominee, setNominee] = useState<CandidateId | null>(null);
+  const [gridChecked, setGridChecked] = useState(false);
+  const [pieces, setPieces] = useState<LaborValuePiece[]>([]);
+  const [valueChecked, setValueChecked] = useState(false);
+  const [clause, setClause] = useState<"shift" | "half" | "product" | null>(null);
+  const [prediction, setPrediction] = useState<"factory" | "contract" | null>(null);
+  const [contractChecked, setContractChecked] = useState(false);
+  const [hints, setHints] = useState(0);
+  const [hydrated, setHydrated] = useState(false);
+  const gridResult = evaluateEvidenceGrid(grid);
+  const valueResult = evaluateLaborValueFile(pieces);
+
+  useEffect(() => {
+    const saved = readChapterDraft<{ stage: Stage; active: CandidateId; inspected: CandidateId[]; grid: EvidenceGrid; nominee: CandidateId | null; pieces: LaborValuePiece[]; clause: typeof clause; prediction: typeof prediction; hints: number }>(2);
+    if (saved && ["investigate", "value", "contract", "complete"].includes(saved.stage)) {
+      setStage(saved.stage);
+      if (["a", "b", "c"].includes(saved.active)) setActive(saved.active);
+      if (Array.isArray(saved.inspected)) setInspected(saved.inspected);
+      if (saved.grid && typeof saved.grid === "object") setGrid(saved.grid);
+      if (saved.nominee && ["a", "b", "c"].includes(saved.nominee)) setNominee(saved.nominee);
+      if (Array.isArray(saved.pieces)) setPieces(saved.pieces);
+      setClause(saved.clause ?? null);
+      setPrediction(saved.prediction ?? null);
+      if (Number.isInteger(saved.hints)) setHints(saved.hints);
+    }
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (hydrated) saveChapterDraft(2, { stage, active, inspected, grid, nominee, pieces, clause, prediction, hints });
+  }, [hydrated, stage, active, inspected, grid, nominee, pieces, clause, prediction, hints]);
+
+  function playLaborClick() {
+    try {
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = 750;
+      gain.gain.value = 0.025;
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.12);
+      void ctx.resume();
+    } catch {}
+  }
+
+  function playLaborSuccess() {
+    try {
+      const ctx = new AudioContext();
+      const notes = [440, 554.37, 659.25, 880];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.value = freq;
+        gain.gain.value = 0.03;
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35 + i * 0.08);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + i * 0.08);
+        osc.stop(ctx.currentTime + 0.35 + i * 0.08);
+      });
+      void ctx.resume();
+    } catch {}
+  }
+
+  function inspect(id: CandidateId) {
+    playLaborClick();
+    setActive(id);
+    setInspected((current) => current.includes(id) ? current : [...current, id]);
+  }
+
+  function answer(id: CandidateId, condition: LaborCondition, value: boolean) {
+    playLaborClick();
+    setActive(id);
+    setInspected((current) => current.includes(id) ? current : [...current, id]);
+    setGrid((current) => ({ ...current, [id]: { ...current[id], [condition]: value } }));
+    setGridChecked(false);
+  }
+
+  function checkGrid() {
+    setGridChecked(true);
+    const candidate = LABOR_SCENARIOS.find((person) => person.id === nominee);
+    if (gridResult.correct && candidate && evaluateLaborScenario(candidate).qualifies) {
+      playLaborSuccess();
+      setStage("value");
+    }
+  }
+
+  function togglePiece(id: LaborValuePiece) {
+    playLaborClick();
+    setPieces((current) => current.includes(id) ? current.filter((piece) => piece !== id) : [...current, id]);
+    setValueChecked(false);
+  }
+
+  function signContract() {
+    setContractChecked(true);
+    if (clause !== "shift" || prediction !== "factory") return;
+    playLaborSuccess();
+    saveChapterArtifacts({ contract: { workerId: "b", value: 15, hours: 8 } });
+    emitChapterCompleted(2);
+    setStage("complete");
+  }
+
+  function replayInvestigation() {
+    setStage("investigate");
+    setActive("a");
+    setInspected([]);
+    setGrid({});
+    setNominee(null);
+    setGridChecked(false);
+    setPieces([]);
+    setValueChecked(false);
+    setClause(null);
+    setPrediction(null);
+    setContractChecked(false);
+    setHints(0);
+  }
+
+  function isConditionWrong(personId: CandidateId, conditionId: LaborCondition): boolean {
+    if (!gridChecked) return false;
+    const choice = grid[personId]?.[conditionId];
+    const person = LABOR_SCENARIOS.find(p => p.id === personId);
+    return choice !== undefined && person !== undefined && choice !== person[conditionId];
+  }
+
+  const pieceIcons: Record<LaborValuePiece, string> = {
+    living: "/assets/labor-living.svg", training: "/assets/labor-training.svg", children: "/assets/labor-family.svg", cotton: "/assets/resource-cotton.svg", machine: "/assets/resource-spinning-machine.svg",
+  };
+
+  return <GameShell chapter={2}>
+    <div className={styles.questBar}><span><span className={styles.questBarIcon} aria-hidden="true">✨</span>HỒ SƠ 01 · NGƯỜI LAO ĐỘNG</span><span>{stage === "investigate" ? "01 / 03 · ĐIỀU TRA" : stage === "value" ? "02 / 03 · GIÁ TRỊ" : stage === "contract" ? "03 / 03 · HỢP ĐỒNG" : "✅ ĐÃ KÝ HỢP ĐỒNG"}</span></div>
+
+    {stage === "investigate" && <>
+      <h1 className={gameStyles.heading}>AI CÓ THỂ BÁN SỨC LAO ĐỘNG?</h1>
+      <p className={gameStyles.lede}>Mở cả ba hồ sơ, kiểm chứng hai điều kiện cho từng người rồi nộp kết luận. Một điều kiện đúng vẫn chưa đủ.</p>
+      <div className={styles.investigateBrief}><span className={styles.briefNumber}>02</span><div><strong>HAI ĐIỀU KIỆN PHẢI CÙNG XUẤT HIỆN</strong><p>Người lao động tự quyết định bán sức lao động và không đủ tư liệu để tự sản xuất. Đọc chứng cứ rồi đánh dấu từng hồ sơ.</p></div><span className={styles.briefProgress}>{Object.values(grid).reduce((count, row) => count + Number(row?.freeToSellLabor !== undefined) + Number(row?.lacksProductionMeans !== undefined), 0)} / 6 Ô ĐÃ ĐÁNH GIÁ</span></div>
+      <div className={styles.dossierLayout}>
+        <div className={styles.candidateList}>
+          {LABOR_SCENARIOS.map((person) => (
+            <div
+              key={person.id}
+              className={`${styles.candidateCard} ${active === person.id ? styles.candidateActive : ""}`}
+              onClick={() => inspect(person.id)}
+            >
+              <div className={styles.candidateMain}>
+                <Image src={art[person.id]} alt="" width={72} height={60} className={styles.candidateThumb} />
+                <div className={styles.candidateBio}>
+                  <small>HỒ SƠ {person.id.toUpperCase()}</small>
+                  <strong><span className={styles.candidateIcon} aria-hidden="true">{candidateIcons[person.id]}</span>{person.title}</strong>
+                  <em>{stories[person.id].intro}</em>
+                </div>
+              </div>
+              <div className={styles.candidateInlineConditions}>
+                {conditions.map((condition) => {
+                  const choice = grid[person.id]?.[condition.id];
+                  const wrong = isConditionWrong(person.id, condition.id);
+                  return (
+                    <div className={styles.conditionRow} key={condition.id}>
+                      <span className={styles.conditionLabel}>{conditionLabels[condition.id]}</span>
+                      <div className={styles.conditionButtons}>
+                        <button
+                          type="button"
+                          aria-pressed={choice === true}
+                          className={wrong && choice === true ? styles.wrongAnswer : ""}
+                          onClick={(e) => { e.stopPropagation(); answer(person.id, condition.id, true); }}
+                        >
+                          {choice === true ? "✓ " : ""}ĐẠT
+                        </button>
+                        <button
+                          type="button"
+                          aria-pressed={choice === false}
+                          className={wrong && choice === false ? styles.wrongAnswer : ""}
+                          onClick={(e) => { e.stopPropagation(); answer(person.id, condition.id, false); }}
+                        >
+                          {choice === false ? "✗ " : ""}CHƯA ĐẠT
+                        </button>
+                      </div>
+                      {wrong && <small className={styles.wrongHint}>{condition.id === "freeToSellLabor" ? stories[person.id].freedom : stories[person.id].means}</small>}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+        <section className={styles.evidenceDesk} aria-live="polite">
+          <span className={styles.seal}>✦ CHỨNG CỨ HỒ SƠ {active.toUpperCase()}</span>
+          <h2>{LABOR_SCENARIOS.find((person) => person.id === active)?.title}</h2>
+          <div className={styles.evidenceCards}>
+            <div><small><span className={styles.evidenceIcon} aria-hidden="true">01</span>QUYỀN QUYẾT ĐỊNH</small><p>{stories[active].freedom}</p></div>
+            <div><small><span className={styles.evidenceIcon} aria-hidden="true">02</span>TƯ LIỆU SẢN XUẤT</small><p>{stories[active].means}</p></div>
+          </div>
+          <p className={styles.evidenceNote}>Đối chiếu hai chứng cứ với hai điều kiện ở hồ sơ đang mở.</p>
+        </section>
+      </div>
+      <section className={styles.nomination}><strong>QUYẾT ĐỊNH CUỐI HỒ SƠ · CHỌN NGƯỜI ĐẠT CẢ HAI ĐIỀU KIỆN</strong><div>{LABOR_SCENARIOS.map((person) => <button key={person.id} type="button" aria-pressed={nominee === person.id} onClick={() => { setNominee(person.id); setGridChecked(false); }}><span className={styles.candidateIcon} aria-hidden="true">{candidateIcons[person.id]}</span>{person.id.toUpperCase()} · {person.title}</button>)}</div></section>
+      {gridChecked && !gridResult.correct && <p className={styles.feedback} role="status">{gridResult.missing.length ? `Còn ${gridResult.missing.length} ô chưa kết luận. ` : ""}{gridResult.wrong.length ? `${gridResult.wrong.length} ô mâu thuẫn với chứng cứ; các ô đúng được giữ lại.` : ""}</p>}
+      {gridChecked && gridResult.correct && nominee !== "b" && <p className={styles.feedback} role="status">Bảng suy luận đã đúng. Hãy đề cử người có cả hai ô &ldquo;ĐẠT&rdquo; trong cùng một hàng.</p>}
+      {hints > 0 && <aside className={styles.hint}><Image src="/assets/hint-lightbulb.svg" alt="" width={43} height={43} /><p>{hints === 1 ? "Câu hỏi: người này có thể tự quyết định bán sức lao động không? Hãy tìm một hồ sơ mà câu trả lời cho cả hai điều kiện không mâu thuẫn." : "Câu hỏi tiếp theo: hồ sơ nào cho thấy người lao động không đủ tư liệu để tự sản xuất? Đừng chọn chỉ vì nhân vật đang nhận lương."}</p></aside>}
+      <div className={gameStyles.buttonRow}><button className={gameStyles.button} type="button" onClick={checkGrid}>NỘP BẢNG SUY LUẬN →</button><button className={`${gameStyles.button} ${gameStyles.buttonBrown}`} type="button" onClick={() => setHints((count) => Math.min(count + 1, 2))}>💡 GỢI Ý {hints}/2</button></div>
+    </>}
+
+    {stage === "value" && <>
+      <h1 className={gameStyles.heading}>LẬP HỒ SƠ GIÁ TRỊ SỨC LAO ĐỘNG</h1>
+      <p className={gameStyles.lede}>Người lao động làm thuê đã đạt cả hai điều kiện. Chọn những nhu cầu cần thiết để duy trì và tái sản xuất sức lao động; loại vật tư của nhà máy.</p>
+      <div className={styles.valueWorkbench}>
+        <div className={styles.pieceGrid}>{LABOR_VALUE_PIECES.map((piece) => <button key={piece.id} className={styles.piece} type="button" aria-pressed={pieces.includes(piece.id)} onClick={() => togglePiece(piece.id)}><Image src={pieceIcons[piece.id]} alt="" width={68} height={62} /><strong>{piece.label}</strong><small>{piece.explanation}</small></button>)}</div>
+        <aside className={styles.fileBox}><small>HỒ SƠ ĐANG LẬP · {pieces.length} MỤC ĐÃ CHỌN</small><h2>GIÁ TRỊ SỨC LAO ĐỘNG</h2>{pieces.length ? <ul>{pieces.map((piece) => <li key={piece}><Image src={pieceIcons[piece]} alt="" width={34} height={31} />{LABOR_VALUE_PIECES.find((item) => item.id === piece)?.label}</li>)}</ul> : <div className={styles.fileChecklist}><p>Chọn các mảnh hồ sơ ở bên trái.</p><span>01 · NHU CẦU CẦN THIẾT</span><span>02 · NHU CẦU CẦN THIẾT</span><span>03 · NHU CẦU CẦN THIẾT</span></div>}<strong>Giá trị của ca trong ví dụ: 15 USD</strong></aside>
+      </div>
+      {valueChecked && !valueResult.correct && (
+        <p className={styles.feedback} role="status">
+          💡 <strong>Gợi ý suy luận:</strong> Giá trị sức lao động được quyết định bởi lượng lao động xã hội cần thiết để sản xuất và tái sản xuất ra sức lao động (thông qua giá trị các tư liệu sinh hoạt nuôi sống con người lao động). Các vật tư dùng cho quá trình sản xuất của xưởng sợi không thuộc về giá trị người lao động. Hãy tự đối chiếu 3 nhóm nhu cầu này!
+        </p>
+      )}
+      <div className={gameStyles.buttonRow}><button className={gameStyles.button} type="button" onClick={() => { setValueChecked(true); if (valueResult.correct) { playLaborSuccess(); setStage("contract"); } }}>KIỂM TRA HỒ SƠ →</button></div>
+    </>}
+
+    {stage === "contract" && <>
+      <h1 className={gameStyles.heading}>KÝ HỢP ĐỒNG CHO CA KÉO SỢI</h1>
+      <p className={gameStyles.lede}>15 USD là giá trị sức lao động trong ví dụ. Hãy xác định hợp đồng mua gì và dự đoán giá trị sử dụng của nó sẽ bộc lộ ở đâu.</p>
+      <div className={styles.contractHero}>
+        <div>
+          <span className={styles.heroBadge}>⚡ ĐIỀU KHOẢN THEN CHỐT</span>
+          <h2>15 USD · CA 8 GIỜ</h2>
+          <span>Nhà tư bản ứng trước tiền mua sức lao động một lần cho toàn bộ thời gian của ca</span>
+        </div>
+      </div>
+      <div className={styles.contractGrid}>
+        <section className={styles.contractCard}>
+          <small><span className={styles.contractCardIcon} aria-hidden="true">📋</span>ĐIỀU KHOẢN 01 · PHẠM VI HỢP ĐỒNG</small>
+          <h2 className={styles.sectionAccent}>Hợp đồng nào phản ánh đúng bản chất?</h2>
+          {(([
+            ["shift", "Mua sức lao động để sử dụng trong cả ca 8 giờ · 15 USD"],
+            ["half", "Trả 15 USD cho mỗi 4 giờ của cùng ca"],
+            ["product", "Mua sẵn cuộn sợi thành phẩm giá 15 USD"],
+          ] as const)).map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              className={clause === id ? styles.contractSelected : ""}
+              aria-pressed={clause === id}
+              onClick={() => { setClause(id); setContractChecked(false); }}
+            >
+              <strong>{label}</strong>
+            </button>
+          ))}
+        </section>
+        <section className={styles.contractCard}>
+          <small><span className={styles.contractCardIcon} aria-hidden="true">🔮</span>GIẢ THUYẾT 02 · GIÁ TRỊ SỬ DỤNG ĐẶC BIỆT</small>
+          <h2 className={styles.sectionAccent}>Khả năng tạo giá trị mới bộc lộ ở đâu?</h2>
+          <button
+            type="button"
+            className={prediction === "factory" ? styles.contractSelected : ""}
+            aria-pressed={prediction === "factory"}
+            onClick={() => { setPrediction("factory"); setContractChecked(false); }}
+          >
+            <strong>Trong quá trình người lao động làm việc tại nhà máy</strong>
+          </button>
+          <button
+            type="button"
+            className={prediction === "contract" ? styles.contractSelected : ""}
+            aria-pressed={prediction === "contract"}
+            onClick={() => { setPrediction("contract"); setContractChecked(false); }}
+          >
+            <strong>Ngay khi ký giấy tờ, trước khi sản xuất</strong>
+          </button>
+        </section>
+      </div>
+      {contractChecked && (clause !== "shift" || prediction !== "factory") && <p className={styles.feedback} role="status">Hãy xem hợp đồng mua <strong>năng lực lao động trong thời gian đã thỏa thuận</strong> hay mua sản phẩm đã làm ra. Sau khi ký, đã có lao động nào diễn ra để tạo giá trị mới chưa?</p>}
+      <div className={styles.contractDecision} aria-live="polite"><span>01 · {clause ? "ĐÃ CHỌN ĐIỀU KHOẢN" : "CHƯA CHỌN ĐIỀU KHOẢN"}</span><span>02 · {prediction ? "ĐÃ ĐẶT GIẢ THUYẾT" : "CHƯA ĐẶT GIẢ THUYẾT"}</span>{contractChecked && clause === "shift" && prediction === "factory" && <strong>Hợp đồng ngang giá; giá trị sử dụng được kiểm tra trong sản xuất.</strong>}</div>
+      <div className={gameStyles.buttonRow}><button className={gameStyles.button} type="button" onClick={signContract}>KÝ VÀ ĐƯA HỒ SƠ ĐẾN XƯỞNG →</button></div>
+    </>}
+
+    {stage === "complete" && <>
+      <h1 className={gameStyles.heading}>HỒ SƠ ĐÃ ĐƯỢC XÁC MINH</h1>
+      <div className={styles.completionCelebrate}>
+        <ConfettiEffect />
+        <Image src="/assets/labor-ready-worker.svg" alt="Công nhân làm thuê giang tay nâng hai cuộn sợi, hào hứng bắt đầu ca làm việc" width={225} height={245} className={styles.readyWorker} />
+        <div>
+          <small>HỢP ĐỒNG 8 GIỜ · 15 USD</small>
+          <h2>Người lao động làm thuê</h2>
+          <p>Hai điều kiện cùng được chứng minh. Giá trị sức lao động gồm sinh hoạt, đào tạo và nuôi con. Tiếp theo, hãy kiểm tra trong nhà máy liệu 8 giờ lao động tạo ra bao nhiêu giá trị mới.</p>
+          <span className={styles.readyBadge}>SẴN SÀNG BƯỚC VÀO CA 8 GIỜ</span>
+        </div>
+      </div>
+      <div className={gameStyles.buttonRow}><Link className={`${gameStyles.button} ${styles.journeyButton}`} href="/learn/chapter-3"><span className={styles.truckSmoke} aria-hidden="true">···</span><span className={styles.truck} aria-hidden="true"><svg viewBox="0 0 54 32" fill="none"><path d="M3 7h29v19H3zM32 13h10l8 8v5H32z" fill="#e6bf78" stroke="#fff4d6" strokeWidth="2"/><path d="M36 15h5l5 5H36z" fill="#9fc4bc"/><circle cx="13" cy="27" r="4" fill="#443225" stroke="#fff4d6" strokeWidth="2"/><circle cx="41" cy="27" r="4" fill="#443225" stroke="#fff4d6" strokeWidth="2"/></svg></span>ĐẾN NHÀ MÁY →</Link><button className={`${gameStyles.button} ${gameStyles.buttonBrown}`} type="button" onClick={replayInvestigation}>↺ ĐIỀU TRA LẠI</button></div>
+    </>}
+  </GameShell>;
 }
