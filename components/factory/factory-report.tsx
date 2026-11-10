@@ -8,7 +8,7 @@ interface FactoryReportProps {
   onReplay: () => void;
 }
 
-export function FactoryReport({ onReplay }: FactoryReportProps) {
+export function FactoryReport({ snapshot, onReplay }: FactoryReportProps) {
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col items-center">
       <div className="w-full rounded-2xl border-4 border-[#82674c] bg-[#fbf6e5] p-6 shadow-2xl sm:p-10">
@@ -34,10 +34,10 @@ export function FactoryReport({ onReplay }: FactoryReportProps) {
               TƯ BẢN BẤT BIẾN (c)
             </span>
             <span className="mt-2 font-serif text-3xl font-extrabold text-[#233f50] sm:text-4xl">
-              106 USD
+              {snapshot.constantCapital} USD
             </span>
             <span className="mt-1 text-[11px] text-[#705c47]">
-              100 Bông + 6 Máy
+              {snapshot.cottonUsed} Bông + {snapshot.machineDepreciation} Máy
             </span>
           </div>
 
@@ -47,7 +47,7 @@ export function FactoryReport({ onReplay }: FactoryReportProps) {
               TƯ BẢN KHẢ BIẾN (v)
             </span>
             <span className="mt-2 font-serif text-3xl font-extrabold text-[#782923] sm:text-4xl">
-              15 USD
+              {snapshot.variableCapital} USD
             </span>
             <span className="mt-1 text-[11px] text-[#705c47]">
               Giá trị sức lao động
@@ -60,7 +60,7 @@ export function FactoryReport({ onReplay }: FactoryReportProps) {
               GIÁ TRỊ MỚI (v + m)
             </span>
             <span className="mt-2 font-serif text-3xl font-extrabold text-[#2e2013] sm:text-4xl">
-              30 USD
+              {snapshot.newValue} USD
             </span>
             <span className="mt-1 text-[11px] text-[#705c47]">
               Tạo ra trong 8 giờ
@@ -73,7 +73,7 @@ export function FactoryReport({ onReplay }: FactoryReportProps) {
               THẶNG DƯ (m)
             </span>
             <span className="mt-2 font-serif text-3xl font-extrabold text-[#8c3e36] sm:text-4xl">
-              15 USD
+              {snapshot.surplusValue} USD
             </span>
             <span className="mt-1 text-[11px] text-[#80312a]">
               4h dôi ra ngoài v
@@ -87,21 +87,21 @@ export function FactoryReport({ onReplay }: FactoryReportProps) {
             GIÁ TRỊ SẢN PHẨM: G = c + (v + m)
           </h3>
           <p className="mt-2 font-serif text-2xl font-extrabold text-[#6d2721] sm:text-3xl">
-            136 USD = 106 USD + (15 USD + 15 USD)
+            {snapshot.productValue} USD = {snapshot.constantCapital} USD + ({snapshot.variableCapital} USD + {snapshot.surplusValue} USD)
           </p>
           <div className="mx-auto mt-4 max-w-2xl text-left text-xs text-[#52402e] sm:text-sm">
             <ul className="list-inside list-disc space-y-1">
               <li>
-                <strong>Tư bản ứng trước ban đầu:</strong> 100 bông + 6 hao mòn
-                + 15 sức lao động = <strong>121 USD</strong>.
+                <strong>Tư bản ứng trước ban đầu:</strong> {snapshot.cottonUsed} bông + {snapshot.machineDepreciation} hao mòn
+                + {snapshot.variableCapital} sức lao động = <strong>{snapshot.capitalAdvancedTotal} USD</strong>.
               </li>
               <li>
                 <strong>Tổng giá trị hàng hóa thu được:</strong>{" "}
-                <strong>136 USD</strong>.
+                <strong>{snapshot.productValue} USD</strong>.
               </li>
               <li>
-                <strong>Phần chênh lệch dôi ra (ΔT = m):</strong> 136 – 121 ={" "}
-                <strong>15 USD</strong> chính là <em>giá trị thặng dư</em> do lao
+                <strong>Phần chênh lệch dôi ra (ΔT = m):</strong> {snapshot.productValue} – {snapshot.capitalAdvancedTotal} ={" "}
+                <strong>{snapshot.surplusValue} USD</strong> chính là <em>giá trị thặng dư</em> do lao
                 động thặng dư của người công nhân tạo ra!
               </li>
             </ul>

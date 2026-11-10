@@ -1,5 +1,12 @@
 export type FactoryStage = "preparation" | "running" | "checkpoint" | "completed";
 
+export type FactoryPhase =
+  | "ready"
+  | "necessary-labor"
+  | "checkpoint"
+  | "surplus-labor"
+  | "complete";
+
 export type CheckpointAnswer = "already_appeared" | "not_yet_appeared";
 
 export interface FactoryConfig {
@@ -9,6 +16,26 @@ export interface FactoryConfig {
   depreciationTotal: number;
   laborPowerValue: number;
   newValueTotal: number;
+  // Aliases for compatibility
+  cottonValue?: number;
+  machineDepreciation?: number;
+}
+
+export interface FactorySetup {
+  cottonReady: boolean;
+  machineReady: boolean;
+  laborHired: boolean;
+}
+
+export interface FactoryIssue {
+  code:
+    | "invalid-number"
+    | "invalid-hours"
+    | "inconsistent-necessary-hours"
+    | "resource-not-ready"
+    | "hour-out-of-range";
+  field: string;
+  message: string;
 }
 
 export interface FactorySnapshot {
@@ -16,23 +43,59 @@ export interface FactorySnapshot {
   cottonUsed: number;
   machineDepreciation: number;
   constantCapital: number; // c = cottonUsed + machineDepreciation
-  variableCapital: number; // v = laborPowerValue (15 USD)
+  variableCapital: number; // v = laborPowerValue
   newValue: number; // (v + m) = (newValueTotal / totalHours) * hour
   surplusValue: number; // m = max(0, newValue - variableCapital)
   productValue: number; // G = constantCapital + newValue
   isNecessaryLabor: boolean; // hour <= necessaryHours
   isSurplusLabor: boolean; // hour > necessaryHours
   progressPercent: number; // 0 to 100%
+
+  // Extended M5 properties
+  phase: FactoryPhase;
+  isCheckpoint: boolean;
+  isComplete: boolean;
+  capitalAdvancedTotal: number; // Tổng vốn ứng trước ban đầu = c_total + v (121 USD)
+  capitalUsedThroughHour: number; // Vốn đã chuyển vào sản phẩm tại mốc giờ
+  cottonTransferred: number; // Đồng nghĩa với cottonUsed
+  machineTransferred: number; // Đồng nghĩa với machineDepreciation
+  transferredValue: number; // Đồng nghĩa với constantCapital
+  illustrativeFullInputValue: number; // Số minh họa toàn bộ đầu vào cả ca + m (như frame Figma 63:11686)
+  isInterpolated: boolean; // True nếu là mốc trung gian
 }
 
-export const DEFAULT_FACTORY_CONFIG: FactoryConfig = {
+export interface FactoryResult {
+  constantCapital: number; // c = 106 USD
+  variableCapital: number; // v = 15 USD
+  surplusValue: number; // m = 15 USD
+  newValue: number; // v + m = 30 USD
+  productValue: number; // G = c + v + m = 136 USD
+  capitalAdvancedTotal: number; // c + v = 121 USD
+  necessaryHours: number; // 4 giờ
+  surplusHours: number; // 4 giờ
+  rateOfSurplusValue: number; // m' = (m / v) * 100 = 100%
+  checkpoint: FactorySnapshot;
+  completion: FactorySnapshot;
+}
+
+export const DEFAULT_FACTORY_CONFIG: Readonly<FactoryConfig> = Object.freeze({
   totalHours: 8,
   necessaryHours: 4,
   cottonTotal: 100,
   depreciationTotal: 6,
   laborPowerValue: 15,
   newValueTotal: 30,
-};
+  cottonValue: 100,
+  machineDepreciation: 6,
+});
+
+export const TEXTBOOK_FACTORY_CONFIG = DEFAULT_FACTORY_CONFIG;
+
+export const EMPTY_FACTORY_SETUP: Readonly<FactorySetup> = Object.freeze({
+  cottonReady: false,
+  machineReady: false,
+  laborHired: false,
+});
 
 export interface FactoryResourceItem {
   id: "cotton" | "machine" | "labor";
