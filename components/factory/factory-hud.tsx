@@ -5,6 +5,7 @@ import Link from "next/link";
 interface FactoryHudProps {
   capitalUSD?: number;
   missionNumber?: string;
+  chapterTitle?: string;
   badgeCount?: number;
   onOpenLog?: () => void;
 }
@@ -12,6 +13,7 @@ interface FactoryHudProps {
 export function FactoryHud({
   capitalUSD = 121,
   missionNumber = "03",
+  chapterTitle = "Chương 3: Giá trị thặng dư",
   badgeCount = 2,
   onOpenLog,
 }: FactoryHudProps) {
@@ -33,7 +35,7 @@ export function FactoryHud({
                 SURPLUS LAB
               </span>
               <span className="text-[10px] tracking-widest text-[#a89678] uppercase">
-                Chương 3: Giá trị thặng dư
+                {chapterTitle}
               </span>
             </div>
           </Link>
