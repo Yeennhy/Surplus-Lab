@@ -1,11 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { questions } from "@/content/questions";
 import type { Question, QuizResult } from "@/features/quiz/types";
 
 type QuizPhase = "question" | "feedback" | "results";
+const QUIZ_QUESTION_COUNT = 10;
+
+function selectRandomQuestions(source: Question[], count: number): Question[] {
+  const shuffled = [...source];
+
+  for (let index = 0; index < count; index += 1) {
+    const swapIndex = index + Math.floor(Math.random() * (shuffled.length - index));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+
+  return shuffled.slice(0, count);
+}
 
 function isCorrectAnswer(question: Question, answer: string): boolean {
   if (question.type === "choice") {
@@ -36,6 +48,7 @@ function getSelectedAnswerLabel(question: Question, answer: string): string {
 }
 
 export function QuizScreen({ onComplete }: { onComplete?: (result: QuizResult) => void }) {
+  const [quizQuestions, setQuizQuestions] = useState(() => questions.slice(0, QUIZ_QUESTION_COUNT));
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selectedChoice, setSelectedChoice] = useState("");
   const [numericAnswer, setNumericAnswer] = useState("");
@@ -43,7 +56,11 @@ export function QuizScreen({ onComplete }: { onComplete?: (result: QuizResult) =
   const [answerWasCorrect, setAnswerWasCorrect] = useState(false);
   const [score, setScore] = useState(0);
   const [phase, setPhase] = useState<QuizPhase>("question");
-  const question = questions[questionIndex];
+  const question = quizQuestions[questionIndex];
+
+  useEffect(() => {
+    setQuizQuestions(selectRandomQuestions(questions, QUIZ_QUESTION_COUNT));
+  }, []);
 
   function submitAnswer() {
     const answer = question.type === "choice" ? selectedChoice : numericAnswer.trim();
@@ -64,11 +81,11 @@ export function QuizScreen({ onComplete }: { onComplete?: (result: QuizResult) =
   }
 
   function advanceQuestion() {
-    if (questionIndex === questions.length - 1) {
+    if (questionIndex === quizQuestions.length - 1) {
       onComplete?.({
         score,
-        total: questions.length,
-        percentage: Math.round((score / questions.length) * 100),
+        total: quizQuestions.length,
+        percentage: Math.round((score / quizQuestions.length) * 100),
       });
       setPhase("results");
       return;
@@ -82,6 +99,7 @@ export function QuizScreen({ onComplete }: { onComplete?: (result: QuizResult) =
   }
 
   function restartQuiz() {
+    setQuizQuestions(selectRandomQuestions(questions, QUIZ_QUESTION_COUNT));
     setQuestionIndex(0);
     setSelectedChoice("");
     setNumericAnswer("");
@@ -91,7 +109,7 @@ export function QuizScreen({ onComplete }: { onComplete?: (result: QuizResult) =
     setPhase("question");
   }
 
-  const progress = ((questionIndex + 1) / questions.length) * 100;
+  const progress = ((questionIndex + 1) / quizQuestions.length) * 100;
 
   return (
     <main className="min-h-screen bg-[#183126] px-3 py-5 text-[#392719] sm:px-6 sm:py-8">
@@ -112,20 +130,20 @@ export function QuizScreen({ onComplete }: { onComplete?: (result: QuizResult) =
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#7b5b39]">Thử thách kiến thức</p>
                   <h1 className="mt-2 font-serif text-2xl font-bold sm:text-3xl">
-                    Câu [{String(questionIndex + 1).padStart(2, "0")}/{String(questions.length).padStart(2, "0")}]
+                    Câu [{String(questionIndex + 1).padStart(2, "0")}/{String(quizQuestions.length).padStart(2, "0")}]
                   </h1>
                 </div>
                 <div className="min-w-36 text-right">
                   <p className="text-xs font-bold uppercase tracking-widest text-[#6b5135]">Điểm</p>
-                  <p className="mt-1 font-serif text-2xl font-bold text-[#276342]">{score} / {questions.length}</p>
+                  <p className="mt-1 font-serif text-2xl font-bold text-[#276342]">{score} / {quizQuestions.length}</p>
                 </div>
               </div>
 
               <div className="mt-6 flex items-center gap-3">
                 <span className="shrink-0 rounded bg-[#6b4a31] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#fff1ce]">
-                  Câu {questionIndex + 1} / {questions.length}
+                  Câu {questionIndex + 1} / {quizQuestions.length}
                 </span>
-                <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#ddc99b]" aria-label={`Tiến độ ${questionIndex + 1} trên ${questions.length}`}>
+                <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#ddc99b]" aria-label={`Tiến độ ${questionIndex + 1} trên ${quizQuestions.length}`}>
                   <div className="h-full rounded-full bg-[#397350] transition-[width]" style={{ width: `${progress}%` }} />
                 </div>
               </div>
@@ -135,7 +153,7 @@ export function QuizScreen({ onComplete }: { onComplete?: (result: QuizResult) =
                 <p className="font-serif text-lg font-bold leading-relaxed sm:text-xl">{question.prompt}</p>
                 {question.type === "choice" ? (
                   <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                    {question.choices.map((choice, index) => {
+                    {question.choices.map((choice) => {
                       const isSelected = selectedChoice === choice.id;
                       return (
                         <button
@@ -145,7 +163,7 @@ export function QuizScreen({ onComplete }: { onComplete?: (result: QuizResult) =
                           onClick={() => setSelectedChoice(choice.id)}
                           className={`flex min-h-20 items-start gap-4 rounded-md border p-4 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#276342] ${isSelected ? "border-[#276342] bg-[#d2ddc7]" : "border-[#c6ad7d] bg-[#e7d5ad] hover:bg-[#efdfbb]"}`}
                         >
-                          <span className={`grid size-8 shrink-0 place-items-center rounded text-xs font-black text-[#fff1ce] ${isSelected ? "bg-[#276342]" : index === 0 ? "bg-[#c79a48]" : "bg-[#765137]"}`}>
+                          <span className={`grid size-8 shrink-0 place-items-center rounded text-xs font-black text-[#fff1ce] ${isSelected ? "bg-[#276342]" : "bg-[#765137]"}`}>
                             {choice.id}
                           </span>
                           <span className="pt-1 text-sm font-semibold leading-relaxed">{choice.text}</span>
@@ -222,7 +240,7 @@ export function QuizScreen({ onComplete }: { onComplete?: (result: QuizResult) =
                   </button>
                 )}
                 <button type="button" onClick={advanceQuestion} className="min-h-12 rounded bg-[#34704e] px-8 text-sm font-bold uppercase tracking-wide text-[#fff1ce] hover:bg-[#285c3e]">
-                  {questionIndex === questions.length - 1 ? "Xem kết quả" : "Câu tiếp theo →"}
+                  {questionIndex === quizQuestions.length - 1 ? "Xem kết quả" : "Câu tiếp theo →"}
                 </button>
               </div>
             </>
@@ -232,9 +250,9 @@ export function QuizScreen({ onComplete }: { onComplete?: (result: QuizResult) =
             <div className="mx-auto max-w-2xl py-8 text-center">
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#7b5b39]">Thử thách hoàn tất</p>
               <h1 className="mt-3 font-serif text-3xl font-bold sm:text-4xl">Kết quả của bạn</h1>
-              <p className="mt-6 font-serif text-6xl font-bold text-[#276342]">{score}<span className="text-3xl text-[#765137]"> / {questions.length}</span></p>
+              <p className="mt-6 font-serif text-6xl font-bold text-[#276342]">{score}<span className="text-3xl text-[#765137]"> / {quizQuestions.length}</span></p>
               <p className="mt-4 text-base leading-relaxed">
-                {score === questions.length ? "Xuất sắc. Bạn đã nắm vững các khái niệm chính." : "Hãy xem lại các lời giải và thử thách bản thân thêm lần nữa."}
+                {score === quizQuestions.length ? "Xuất sắc. Bạn đã nắm vững các khái niệm chính." : "Hãy xem lại các lời giải và thử thách bản thân thêm lần nữa."}
               </p>
               <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
                 <button type="button" onClick={restartQuiz} className="min-h-12 rounded bg-[#954c3b] px-8 text-sm font-bold uppercase tracking-wide text-[#fff4d8] hover:bg-[#7c3d30]">
