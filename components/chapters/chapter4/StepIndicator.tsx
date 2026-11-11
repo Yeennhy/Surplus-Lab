@@ -20,7 +20,7 @@ export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) 
   const currentIndex = STEPS.findIndex((s) => s.id === currentStep);
 
   return (
-    <nav className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 border-b border-[#c8b79b] pb-4">
+    <nav className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 border-b border-[#c8b79b] pb-4 font-sans">
       {STEPS.map((step, idx) => {
         const isActive = step.id === currentStep;
         const isPast = idx < currentIndex;
@@ -30,7 +30,7 @@ export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) 
             key={step.id}
             onClick={() => onStepClick(step.id)}
             className={cn(
-              "flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-serif text-xs font-bold tracking-wider transition-all",
+              "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold tracking-wider transition-all",
               isActive
                 ? "border-2 border-[#541f1a] bg-[#802f28] text-white shadow-md"
                 : isPast
@@ -40,7 +40,7 @@ export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) 
           >
             <span
               className={cn(
-                "flex h-4 w-4 items-center justify-center rounded-full text-[10px]",
+                "flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold",
                 isActive
                   ? "bg-[#d4a359] text-[#1c2420]"
                   : isPast

@@ -10,19 +10,57 @@ interface FactoryScene2DProps {
 export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
   const { hour, isNecessaryLabor } = snapshot;
 
-  // Tính số lượng ống sợi thành phẩm dựa trên giờ (tối đa 4 ống hoàn thành ở 8h)
+  // Số lượng ống sợi thành phẩm dựa trên giờ (tối đa 4 ống hoàn thành ở 8h)
   const yarnSpoolsCount = Math.min(4, Math.floor((hour / 8) * 4) + 1);
-  const yarnFillRatio = hour / 8; // 0 to 1
+  const yarnFillRatio = Math.max(0.05, hour / 8);
 
   return (
-    <div className="relative flex w-full flex-col overflow-hidden rounded-xl border-2 border-[#826a4c] bg-[#ebdcb8] p-4 shadow-inner md:p-6">
+    <div className="relative flex w-full flex-col overflow-hidden rounded-xl border-2 border-[#826a4c] bg-[#ebdcb8] p-4 shadow-inner md:p-6 font-sans">
+      {/* Inline styles for custom spinning and conveyor belt movement */}
+      <style jsx>{`
+        @keyframes conveyorCotton {
+          0% {
+            transform: translateX(0px);
+            opacity: 0.2;
+          }
+          15% {
+            opacity: 1;
+          }
+          85% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateX(75px);
+            opacity: 0.2;
+          }
+        }
+        @keyframes yarnFlow {
+          0% {
+            stroke-dashoffset: 24;
+          }
+          100% {
+            stroke-dashoffset: 0;
+          }
+        }
+        .conveyor-tuft-1 {
+          animation: conveyorCotton 1.2s linear infinite;
+        }
+        .conveyor-tuft-2 {
+          animation: conveyorCotton 1.2s linear infinite;
+          animation-delay: 0.6s;
+        }
+        .yarn-animated {
+          animation: yarnFlow 0.8s linear infinite;
+        }
+      `}</style>
+
       {/* Scene Header & Status Indicator */}
       <div className="flex items-center justify-between border-b border-[#c4ae8c] pb-3">
         <div className="flex items-center gap-2">
-          <span className="font-serif text-sm font-bold tracking-wider text-[#3d2c1b] uppercase">
+          <span className="text-sm font-extrabold tracking-wider text-[#3d2c1b] uppercase">
             XƯỞNG KÉO SỢI 2D
           </span>
-          <span className="text-xs text-[#70563b]">
+          <span className="text-xs font-semibold text-[#70563b]">
             ({hour} / 8 giờ lao động)
           </span>
         </div>
@@ -31,16 +69,14 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
         <div className="flex items-center gap-2">
           <span
             className={`inline-block h-2.5 w-2.5 rounded-full ${
-              isRunning
-                ? "animate-ping bg-emerald-500"
-                : "bg-amber-600"
+              isRunning ? "animate-ping bg-emerald-500" : "bg-amber-600"
             }`}
           />
           <span
             className={`rounded px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider ${
               isRunning
-                ? "bg-emerald-900/10 text-emerald-900"
-                : "bg-amber-900/10 text-amber-900"
+                ? "bg-emerald-900/15 text-emerald-900"
+                : "bg-amber-900/15 text-amber-900"
             }`}
           >
             {isRunning ? "ĐANG VẬN HÀNH" : "TẠM DỪNG"}
@@ -56,7 +92,6 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
-            {/* Vintage gradients */}
             <linearGradient id="woodGradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#c59863" />
               <stop offset="100%" stopColor="#966d3e" />
@@ -110,7 +145,6 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
 
           {/* ================= STATION 1: KHO BÔNG (COTTON HOPPER) ================= */}
           <g transform="translate(60, 90)">
-            {/* Warehouse Box */}
             <rect
               x="0"
               y="30"
@@ -121,7 +155,6 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
               stroke="#6b4c2b"
               strokeWidth="3"
             />
-            {/* Wooden slats */}
             <line
               x1="10"
               y1="65"
@@ -162,7 +195,6 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
               fill="#f5e9d3"
               fontSize="10"
               fontWeight="bold"
-              fontFamily="serif"
             >
               100 USD BÔNG
             </text>
@@ -177,14 +209,23 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
             stroke="#45311e"
             strokeWidth="6"
           />
-          {/* Animated cotton tuft moving along conveyor */}
-          <g
-            className={isRunning ? "animate-pulse" : ""}
-            style={{
-              transform: `translateX(${((hour * 25) % 80)}px)`,
-            }}
-          >
-            <circle cx="210" cy="162" r="8" fill="#ffffff" opacity="0.9" />
+
+          {/* Rapid Cotton Transportation Tufts */}
+          <g transform="translate(200, 162)">
+            {isRunning ? (
+              <>
+                <g className="conveyor-tuft-1">
+                  <circle cx="5" cy="0" r="7" fill="#ffffff" opacity="0.95" />
+                  <circle cx="9" cy="-2" r="5" fill="#f5ecd5" opacity="0.8" />
+                </g>
+                <g className="conveyor-tuft-2">
+                  <circle cx="5" cy="0" r="7" fill="#ffffff" opacity="0.95" />
+                  <circle cx="9" cy="-2" r="5" fill="#f5ecd5" opacity="0.8" />
+                </g>
+              </>
+            ) : (
+              <circle cx="35" cy="0" r="7" fill="#ffffff" opacity="0.8" />
+            )}
           </g>
 
           {/* ================= STATION 2: MÁY KÉO SỢI (SPINNING MACHINE) ================= */}
@@ -201,7 +242,7 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
               strokeWidth="3"
             />
 
-            {/* Industrial Rivets */}
+            {/* Rivets */}
             <circle cx="12" cy="22" r="3" fill="#3f2b18" />
             <circle cx="188" cy="22" r="3" fill="#3f2b18" />
             <circle cx="12" cy="148" r="3" fill="#3f2b18" />
@@ -223,104 +264,97 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
               fill="#f7ebd2"
               fontSize="10"
               fontWeight="bold"
-              fontFamily="serif"
             >
               MÁY KÉO SỢI
             </text>
 
-            {/* Drive Belt around Pulleys */}
+            {/* Drive Belt Loop connecting the two flywheels */}
             <rect
-              x="40"
-              y="60"
-              width="120"
-              height="50"
-              rx="25"
+              x="35"
+              y="55"
+              width="130"
+              height="60"
+              rx="30"
               fill="none"
-              stroke="#342214"
-              strokeWidth="6"
+              stroke="#2c1a0e"
+              strokeWidth="5"
             />
 
-            {/* Left Flywheel / Pulley */}
-            <g
-              transform="translate(65, 85)"
-              className={isRunning ? "origin-center animate-spin" : ""}
-              style={{ animationDuration: "2.5s" }}
-            >
-              <circle
-                cx="0"
-                cy="0"
-                r="30"
-                fill="#deb887"
-                stroke="#4a311b"
-                strokeWidth="4"
-              />
-              <circle cx="0" cy="0" r="10" fill="#4a311b" />
-              {/* Spokes */}
-              <line
-                x1="-30"
-                y1="0"
-                x2="30"
-                y2="0"
-                stroke="#4a311b"
-                strokeWidth="3"
-              />
-              <line
-                x1="0"
-                y1="-30"
-                x2="0"
-                y2="30"
-                stroke="#4a311b"
-                strokeWidth="3"
-              />
+            {/* Left Pulley Flywheel - rotates in place around its exact center (0,0) */}
+            <g transform="translate(65, 85)">
+              <g>
+                {isRunning && (
+                  <animateTransform
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 0 0"
+                    to="360 0 0"
+                    dur="2s"
+                    repeatCount="indefinite"
+                  />
+                )}
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="28"
+                  fill="#deb887"
+                  stroke="#4a311b"
+                  strokeWidth="3.5"
+                />
+                <circle cx="0" cy="0" r="9" fill="#4a311b" />
+                <circle cx="0" cy="0" r="4" fill="#deb887" />
+                {/* 4 Spokes */}
+                <line x1="-28" y1="0" x2="28" y2="0" stroke="#4a311b" strokeWidth="2.5" />
+                <line x1="0" y1="-28" x2="0" y2="28" stroke="#4a311b" strokeWidth="2.5" />
+                <line x1="-20" y1="-20" x2="20" y2="20" stroke="#4a311b" strokeWidth="1.5" />
+                <line x1="-20" y1="20" x2="20" y2="-20" stroke="#4a311b" strokeWidth="1.5" />
+              </g>
             </g>
 
-            {/* Right Flywheel / Pulley */}
-            <g
-              transform="translate(135, 85)"
-              className={isRunning ? "origin-center animate-spin" : ""}
-              style={{ animationDuration: "2.5s" }}
-            >
-              <circle
-                cx="0"
-                cy="0"
-                r="30"
-                fill="#deb887"
-                stroke="#4a311b"
-                strokeWidth="4"
-              />
-              <circle cx="0" cy="0" r="10" fill="#4a311b" />
-              {/* Spokes */}
-              <line
-                x1="-30"
-                y1="0"
-                x2="30"
-                y2="0"
-                stroke="#4a311b"
-                strokeWidth="3"
-              />
-              <line
-                x1="0"
-                y1="-30"
-                x2="0"
-                y2="30"
-                stroke="#4a311b"
-                strokeWidth="3"
-              />
+            {/* Right Pulley Flywheel - rotates in place around its exact center (0,0) */}
+            <g transform="translate(135, 85)">
+              <g>
+                {isRunning && (
+                  <animateTransform
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 0 0"
+                    to="360 0 0"
+                    dur="2s"
+                    repeatCount="indefinite"
+                  />
+                )}
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="28"
+                  fill="#deb887"
+                  stroke="#4a311b"
+                  strokeWidth="3.5"
+                />
+                <circle cx="0" cy="0" r="9" fill="#4a311b" />
+                <circle cx="0" cy="0" r="4" fill="#deb887" />
+                {/* 4 Spokes */}
+                <line x1="-28" y1="0" x2="28" y2="0" stroke="#4a311b" strokeWidth="2.5" />
+                <line x1="0" y1="-28" x2="0" y2="28" stroke="#4a311b" strokeWidth="2.5" />
+                <line x1="-20" y1="-20" x2="20" y2="20" stroke="#4a311b" strokeWidth="1.5" />
+                <line x1="-20" y1="20" x2="20" y2="-20" stroke="#4a311b" strokeWidth="1.5" />
+              </g>
             </g>
 
             {/* Steam Outlet on top of machine */}
             {isRunning && (
-              <g className="animate-bounce" style={{ animationDuration: "1.8s" }}>
-                <circle cx="100" cy="-5" r="7" fill="#ffffff" opacity="0.6" />
-                <circle cx="108" cy="-15" r="9" fill="#ffffff" opacity="0.4" />
+              <g className="animate-bounce" style={{ animationDuration: "1.5s" }}>
+                <circle cx="100" cy="-5" r="6" fill="#ffffff" opacity="0.6" />
+                <circle cx="106" cy="-14" r="8" fill="#ffffff" opacity="0.4" />
               </g>
             )}
 
             {/* Depreciation Badge */}
             <rect
-              x="35"
+              x="30"
               y="126"
-              width="130"
+              width="140"
               height="18"
               rx="3"
               fill="#263945"
@@ -346,21 +380,20 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
             stroke="#45311e"
             strokeWidth="6"
           />
-          {/* Yarn Thread running across */}
+          {/* Animated Yarn Thread running across */}
           <line
             x1="480"
             y1="168"
             x2="560"
             y2="168"
-            stroke="#f5e1ad"
-            strokeWidth="2.5"
-            strokeDasharray={isRunning ? "6 3" : "none"}
-            className={isRunning ? "animate-pulse" : ""}
+            stroke="#e8c281"
+            strokeWidth="3"
+            strokeDasharray={isRunning ? "8 4" : "none"}
+            className={isRunning ? "yarn-animated" : ""}
           />
 
           {/* ================= STATION 3: SỢI THÀNH PHẨM (FINISHED YARN) ================= */}
           <g transform="translate(560, 90)">
-            {/* Wooden Stand for Yarn Spools */}
             <rect
               x="0"
               y="30"
@@ -378,7 +411,6 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
               const isFilled = index < yarnSpoolsCount;
               return (
                 <g key={index} transform={`translate(${xPos}, 45)`}>
-                  {/* Spool pin */}
                   <line
                     x1="10"
                     y1="0"
@@ -387,12 +419,11 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
                     stroke="#422e1b"
                     strokeWidth="3"
                   />
-                  {/* Yarn wound body (height expands with hour) */}
                   <rect
                     x="2"
                     y={10 + (1 - yarnFillRatio) * 15}
                     width="16"
-                    height={35 * (isFilled ? yarnFillRatio : 0.2)}
+                    height={Math.max(6, 35 * (isFilled ? yarnFillRatio : 0.2))}
                     rx="4"
                     fill={isFilled ? "url(#yarnGradient)" : "#826c54"}
                     stroke="#594027"
@@ -418,7 +449,6 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
               fill="#f5e9d3"
               fontSize="10"
               fontWeight="bold"
-              fontFamily="serif"
             >
               SỢI THÀNH PHẨM
             </text>
@@ -433,7 +463,6 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
               fill="#543c24"
               fontSize="12"
               fontWeight="bold"
-              fontFamily="serif"
             >
               KHO BÔNG
             </text>
@@ -444,7 +473,6 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
               fill="#543c24"
               fontSize="12"
               fontWeight="bold"
-              fontFamily="serif"
             >
               MÁY KÉO SỢI
             </text>
@@ -455,7 +483,6 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
               fill="#543c24"
               fontSize="12"
               fontWeight="bold"
-              fontFamily="serif"
             >
               SỢI THÀNH PHẨM
             </text>
@@ -473,8 +500,8 @@ export function FactoryScene2D({ snapshot, isRunning }: FactoryScene2DProps) {
       >
         <span>
           {isNecessaryLabor
-            ? "🔵 Giai đoạn 1 (0h–4h): THỜI GIAN LAO ĐỘNG TẤT YẾU"
-            : "🔴 Giai đoạn 2 (4h–8h): THỜI GIAN LAO ĐỘNG THẶNG DƯ"}
+            ? "Giai đoạn 1 (0h–4h): THỜI GIAN LAO ĐỘNG TẤT YẾU"
+            : "Giai đoạn 2 (4h–8h): THỜI GIAN LAO ĐỘNG THẶNG DƯ"}
         </span>
         <span className="font-normal italic">
           {isNecessaryLabor

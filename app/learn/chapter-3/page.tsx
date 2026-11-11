@@ -92,6 +92,13 @@ export default function Chapter3Page() {
     }
   };
 
+  const handleStepBackward = () => {
+    if (hour <= 0) return;
+    setIsRunning(false);
+    const prevHour = Math.max(0, Math.round((hour - 1) * 10) / 10);
+    setHour(prevHour);
+  };
+
   const handleReset = () => {
     setIsRunning(false);
     setHour(0);
@@ -153,11 +160,10 @@ export default function Chapter3Page() {
                 setIsRunning(false);
                 setStage("preparation");
               }}
-              className={`rounded px-3 py-1 text-xs font-bold transition ${
-                stage === "preparation"
-                  ? "bg-[#8c3e36] text-white"
-                  : "bg-[#28352e] text-[#cfbea6] hover:bg-[#34443b]"
-              }`}
+              className={`rounded px-3 py-1 text-xs font-bold transition ${stage === "preparation"
+                ? "bg-[#8c3e36] text-white"
+                : "bg-[#28352e] text-[#cfbea6] hover:bg-[#34443b]"
+                }`}
             >
               1. Chuẩn bị
             </button>
@@ -165,11 +171,10 @@ export default function Chapter3Page() {
               onClick={() => {
                 setStage("running");
               }}
-              className={`rounded px-3 py-1 text-xs font-bold transition ${
-                stage === "running"
-                  ? "bg-[#8c3e36] text-white"
-                  : "bg-[#28352e] text-[#cfbea6] hover:bg-[#34443b]"
-              }`}
+              className={`rounded px-3 py-1 text-xs font-bold transition ${stage === "running"
+                ? "bg-[#8c3e36] text-white"
+                : "bg-[#28352e] text-[#cfbea6] hover:bg-[#34443b]"
+                }`}
             >
               2. Vận hành
             </button>
@@ -179,11 +184,10 @@ export default function Chapter3Page() {
                 setHour(8);
                 setStage("completed");
               }}
-              className={`rounded px-3 py-1 text-xs font-bold transition ${
-                stage === "completed"
-                  ? "bg-[#8c3e36] text-white"
-                  : "bg-[#28352e] text-[#cfbea6] hover:bg-[#34443b]"
-              }`}
+              className={`rounded px-3 py-1 text-xs font-bold transition ${stage === "completed"
+                ? "bg-[#8c3e36] text-white"
+                : "bg-[#28352e] text-[#cfbea6] hover:bg-[#34443b]"
+                }`}
             >
               3. Báo cáo
             </button>
@@ -215,6 +219,7 @@ export default function Chapter3Page() {
               speed={speed}
               onTogglePlay={handleTogglePlay}
               onStepForward={handleStepForward}
+              onStepBackward={handleStepBackward}
               onReset={handleReset}
               onSpeedChange={setSpeed}
               onSeek={handleSeek}

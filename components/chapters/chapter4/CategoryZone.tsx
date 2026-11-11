@@ -25,7 +25,7 @@ export function CategoryZone({
     <div
       onClick={onZoneClick}
       className={cn(
-        "flex flex-col justify-between rounded-2xl border-2 p-5 transition-all shadow-sm",
+        "flex flex-col justify-between rounded-2xl border-2 p-5 transition-all shadow-sm font-sans",
         isActive
           ? "border-[#541f1a] bg-[#fff9eb] ring-2 ring-[#d4a359]"
           : "border-[#8a7253] bg-[#fbf5e6] hover:bg-[#fff9eb]"
@@ -35,11 +35,11 @@ export function CategoryZone({
         {/* Zone Header */}
         <div className="flex items-center justify-between gap-2 border-b border-[#e2d5bd] pb-3 mb-3">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl border-2 border-[#541f1a] bg-[#802f28] font-serif text-lg font-extrabold text-white shadow-xs">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl border-2 border-[#541f1a] bg-[#802f28] text-base font-extrabold text-white shadow-xs">
               {zone.symbol}
             </span>
             <div>
-              <h3 className="font-serif text-base font-bold text-[#2c1e13]">
+              <h3 className="text-base font-bold text-[#2c1e13]">
                 {zone.title}
               </h3>
               <p className="text-[11px] text-[#7a6448]">{zone.subtitle}</p>
@@ -48,11 +48,11 @@ export function CategoryZone({
 
           {/* Current total */}
           <div className="text-right">
-            <span className="font-serif text-xs font-bold text-[#8c352d]">
-              ${currentTotalUSD} USD
+            <span className="text-xs font-bold text-[#8c352d]">
+              {currentTotalUSD} USD
             </span>
             <div className="text-[10px] text-[#7a6448]">
-              Mục tiêu: ${zone.totalExpectedUSD}
+              Mục tiêu: {zone.totalExpectedUSD} USD
             </div>
           </div>
         </div>
@@ -84,8 +84,8 @@ export function CategoryZone({
           Số thẻ hiện tại: <strong>{assignedCards.length}</strong>
         </span>
         {zone.category === "m" && (
-          <span className="font-serif font-bold text-[#802f28]">
-            ⚠️ Không ứng trước
+          <span className="font-bold text-[#802f28]">
+            Lưu ý: Không ứng trước
           </span>
         )}
       </div>

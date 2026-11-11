@@ -21,10 +21,10 @@ export const VALUE_CARDS: ValueCard[] = [
     valueUSD: TEXTBOOK_NUMBERS.COTTON_USD,
     correctCategory: "c",
     categoryLabel: "Tư bản bất biến (c)",
-    icon: "🌱",
+    icon: "❖",
     isAdvanceCapital: true,
     explanation:
-      "Bông là đối tượng lao động (nguyên liệu). Giá trị của bông ($100) được lao động cụ thể của người thợ bảo toàn và chuyển dịch nguyên vẹn vào sản phẩm sợi, lượng giá trị không đổi nên thuộc tư bản bất biến (c).",
+      "Bông là đối tượng lao động (nguyên liệu). Giá trị của bông (100 USD) được lao động cụ thể của người thợ bảo toàn và chuyển dịch nguyên vẹn vào sản phẩm sợi, lượng giá trị không đổi nên thuộc tư bản bất biến (c).",
   },
   {
     id: "card_machine",
@@ -33,10 +33,10 @@ export const VALUE_CARDS: ValueCard[] = [
     valueUSD: TEXTBOOK_NUMBERS.MACHINE_DEPRECIATION_USD,
     correctCategory: "c",
     categoryLabel: "Tư bản bất biến (c)",
-    icon: "⚙️",
+    icon: "⚙",
     isAdvanceCapital: true,
     explanation:
-      "Máy móc là tư liệu lao động. Trong quá trình vận hành, máy móc chuyển dần từng phần giá trị hao mòn ($6) vào giá trị của sợi thông qua lao động cụ thể, không tự sinh ra giá trị thặng dư nên thuộc tư bản bất biến (c).",
+      "Máy móc là tư liệu lao động. Trong quá trình vận hành, máy móc chuyển dần từng phần giá trị hao mòn (6 USD) vào giá trị của sợi thông qua lao động cụ thể, không tự sinh ra giá trị thặng dư nên thuộc tư bản bất biến (c).",
   },
   {
     id: "card_labor",
@@ -45,10 +45,10 @@ export const VALUE_CARDS: ValueCard[] = [
     valueUSD: TEXTBOOK_NUMBERS.LABOR_POWER_USD,
     correctCategory: "v",
     categoryLabel: "Tư bản khả biến (v)",
-    icon: "👷",
+    icon: "♟",
     isAdvanceCapital: true,
     explanation:
-      "Sức lao động được mua bằng tiền lương ($15). Khi tiêu dùng, lao động trừu tượng của công nhân tạo ra một lượng giá trị mới ($30) lớn hơn giá trị bản thân sức lao động ($15), có sự biến đổi về lượng nên thuộc tư bản khả biến (v).",
+      "Sức lao động được mua bằng tiền lương (15 USD). Khi tiêu dùng, lao động trừu tượng của công nhân tạo ra một lượng giá trị mới (30 USD) lớn hơn giá trị bản thân sức lao động (15 USD), có sự biến đổi về lượng nên thuộc tư bản khả biến (v).",
   },
   {
     id: "card_surplus",
@@ -57,10 +57,10 @@ export const VALUE_CARDS: ValueCard[] = [
     valueUSD: TEXTBOOK_NUMBERS.SURPLUS_VALUE_USD,
     correctCategory: "m",
     categoryLabel: "Giá trị thặng dư (m)",
-    icon: "💎",
+    icon: "✦",
     isAdvanceCapital: false, // CRITICAL: NOT advance capital!
     explanation:
-      "LƯU Ý CỐT LÕI: Giá trị thặng dư (m = $15) KHÔNG PHẢI tư bản ứng trước! Nhà tư bản không hề ứng trước khoản tiền này. Nó là kết quả của lao động thặng dư không công của người công nhân tạo ra trong 4 giờ sau.",
+      "LƯU Ý CỐT LÕI: Giá trị thặng dư (m = 15 USD) KHÔNG PHẢI tư bản ứng trước! Nhà tư bản không hề ứng trước khoản tiền này. Nó là kết quả của lao động thặng dư không công của người công nhân tạo ra trong 4 giờ sau.",
   },
 ];
 

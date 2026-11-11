@@ -17,14 +17,14 @@ export function FactoryNotebook({ snapshot }: FactoryNotebookProps) {
   } = snapshot;
 
   return (
-    <div className="flex h-full w-full flex-col justify-between rounded-xl border-2 border-[#826a4c] bg-[#fbf6e5] p-5 shadow-lg">
+    <div className="flex h-full w-full flex-col justify-between rounded-xl border-2 border-[#826a4c] bg-[#fbf6e5] p-5 shadow-lg font-sans">
       <div>
         {/* Notebook Header */}
         <div className="border-b-2 border-[#b59e7e] pb-3 text-center">
           <span className="text-[10px] font-bold tracking-widest text-[#7a6448] uppercase">
             Hạch toán kinh tế
           </span>
-          <h2 className="font-serif text-xl font-extrabold tracking-wide text-[#2b1c10] sm:text-2xl">
+          <h2 className="text-xl font-extrabold tracking-wide text-[#2b1c10] sm:text-2xl">
             SỔ TAY CA SẢN XUẤT
           </h2>
           <p className="mt-0.5 text-xs text-[#6e5840]">
@@ -37,7 +37,7 @@ export function FactoryNotebook({ snapshot }: FactoryNotebookProps) {
           {/* 1. Tư bản bất biến (c) */}
           <div className="rounded-lg bg-[#f3ebd3] p-3 transition-colors hover:bg-[#ede3c5]">
             <div className="flex items-center justify-between">
-              <span className="font-serif text-xs font-bold tracking-wider text-[#4d3b2a] uppercase">
+              <span className="text-xs font-bold tracking-wider text-[#4d3b2a] uppercase">
                 TƯ BẢN BẤT BIẾN (c)
               </span>
               <span className="rounded bg-[#254558]/10 px-2 py-0.5 text-[10px] font-semibold text-[#254558]">
@@ -45,7 +45,7 @@ export function FactoryNotebook({ snapshot }: FactoryNotebookProps) {
               </span>
             </div>
             <div className="mt-1 flex items-baseline justify-between">
-              <span className="font-serif text-2xl font-extrabold text-[#233f50] sm:text-3xl">
+              <span className="text-2xl font-extrabold text-[#233f50] sm:text-3xl">
                 {constantCapital} USD
               </span>
               <span className="text-xs text-[#665543]">
@@ -59,7 +59,7 @@ export function FactoryNotebook({ snapshot }: FactoryNotebookProps) {
           {/* 2. Giá trị sức lao động (v) */}
           <div className="rounded-lg bg-[#f3ebd3] p-3 transition-colors hover:bg-[#ede3c5]">
             <div className="flex items-center justify-between">
-              <span className="font-serif text-xs font-bold tracking-wider text-[#4d3b2a] uppercase">
+              <span className="text-xs font-bold tracking-wider text-[#4d3b2a] uppercase">
                 GIÁ TRỊ SỨC LAO ĐỘNG (v)
               </span>
               <span className="rounded bg-[#8c3e36]/10 px-2 py-0.5 text-[10px] font-semibold text-[#8c3e36]">
@@ -67,7 +67,7 @@ export function FactoryNotebook({ snapshot }: FactoryNotebookProps) {
               </span>
             </div>
             <div className="mt-1 flex items-baseline justify-between">
-              <span className="font-serif text-2xl font-extrabold text-[#782923] sm:text-3xl">
+              <span className="text-2xl font-extrabold text-[#782923] sm:text-3xl">
                 {variableCapital} USD
               </span>
               <span className="text-xs text-[#665543]">Cố định 8h</span>
@@ -79,7 +79,7 @@ export function FactoryNotebook({ snapshot }: FactoryNotebookProps) {
           {/* 3. Giá trị mới (v + m) */}
           <div className="rounded-lg bg-[#f3ebd3] p-3 transition-colors hover:bg-[#ede3c5]">
             <div className="flex items-center justify-between">
-              <span className="font-serif text-xs font-bold tracking-wider text-[#4d3b2a] uppercase">
+              <span className="text-xs font-bold tracking-wider text-[#4d3b2a] uppercase">
                 GIÁ TRỊ MỚI (v + m)
               </span>
               <span className="rounded bg-[#d4a359]/20 px-2 py-0.5 text-[10px] font-semibold text-[#664917]">
@@ -87,7 +87,7 @@ export function FactoryNotebook({ snapshot }: FactoryNotebookProps) {
               </span>
             </div>
             <div className="mt-1 flex items-baseline justify-between">
-              <span className="font-serif text-2xl font-extrabold text-[#2e2013] sm:text-3xl">
+              <span className="text-2xl font-extrabold text-[#2e2013] sm:text-3xl">
                 {newValue} USD
               </span>
               <span className="text-xs text-[#665543]">3.75 USD / giờ</span>
@@ -105,7 +105,7 @@ export function FactoryNotebook({ snapshot }: FactoryNotebookProps) {
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="font-serif text-xs font-bold tracking-wider text-[#4d3b2a] uppercase">
+              <span className="text-xs font-bold tracking-wider text-[#4d3b2a] uppercase">
                 GIÁ TRỊ THẶNG DƯ (m)
               </span>
               <span
@@ -120,7 +120,7 @@ export function FactoryNotebook({ snapshot }: FactoryNotebookProps) {
             </div>
             <div className="mt-1 flex items-baseline justify-between">
               <span
-                className={`font-serif text-2xl font-extrabold sm:text-3xl ${
+                className={`text-2xl font-extrabold sm:text-3xl ${
                   surplusValue > 0 ? "text-[#8c3e36]" : "text-[#705c47]"
                 }`}
               >
@@ -139,7 +139,7 @@ export function FactoryNotebook({ snapshot }: FactoryNotebookProps) {
         <span className="text-[11px] font-bold text-[#5c442c] uppercase">
           TỔNG GIÁ TRỊ HÀNG HÓA SỢI (G)
         </span>
-        <div className="mt-0.5 font-serif text-xl font-extrabold text-[#241a10]">
+        <div className="mt-0.5 text-xl font-extrabold text-[#241a10]">
           G = c + (v + m) ={" "}
           <span className="text-[#8c3e36]">{productValue} USD</span>
         </div>

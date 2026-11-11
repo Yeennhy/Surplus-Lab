@@ -2,4 +2,4 @@
 
 :root { color-scheme: light; }
 body { margin: 0; background: #f7f5ef; color: #172119; font-family: Arial, Helvetica, sans-serif; }
-a { color: #155e40; }
+a:not([class*="text-"]) { color: #155e40; }
