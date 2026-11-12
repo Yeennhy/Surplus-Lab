@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 190" role="img" aria-label="Công nhân làm thuê tại xưởng sợi">
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#b3c9b5"/><stop offset="1" stop-color="#718f7a"/></linearGradient></defs>
+  <rect width="240" height="190" rx="20" fill="url(#bg)"/>
+  <path d="M11 149h218v41H11z" fill="#6a5943"/><path d="M17 145V64l35-18 26 16 28-22 33 21 32-17 54 26v75" fill="#8b7760" stroke="#4c5146" stroke-width="5"/>
+  <path d="M30 78h20v46H30zm43 0h20v46H73zm74 0h20v46h-20zm40 0h20v46h-20z" fill="#d3c698"/>
+  <circle cx="121" cy="75" r="58" fill="#e7ead0" opacity=".55"/>
+  <path d="M61 172c2-37 20-56 58-56s59 19 61 56" fill="#385b6b" stroke="#283f48" stroke-width="4"/>
+  <path d="M105 111h30l-5 20-10 8-11-8z" fill="#bb8869"/>
+  <ellipse cx="120" cy="76" rx="29" ry="36" fill="#bb8869"/>
+  <path d="M87 68q3-40 33-40t33 40l-14-10-37-1z" fill="#3d332d"/>
+  <path d="M83 60q10-33 38-35 29 1 38 35l-8 9H92z" fill="#345a67" stroke="#243f48" stroke-width="3"/>
+  <path d="M99 84h7m29 0h7" stroke="#3f2a23" stroke-width="3" stroke-linecap="round"/>
+  <path d="M111 99q9 5 18 0" fill="none" stroke="#7b4939" stroke-width="2"/>
+  <path d="M73 141l18-3m59 0 18 3" stroke="#bb8869" stroke-width="10" stroke-linecap="round"/>
+  <path d="M114 119l7 10 7-10" fill="none" stroke="#efe2bb" stroke-width="4"/>
+</svg>

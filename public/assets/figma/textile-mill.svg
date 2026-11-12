@@ -1,0 +1,27 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="520" height="355" viewBox="0 0 520 355" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Cotton mill historic painting" clip-path="url(#clip0_0_337)">
+<path id="Vector" opacity="0.4" d="M256 336C381.369 336 483 314.957 483 289C483 263.043 381.369 242 256 242C130.631 242 29 263.043 29 289C29 314.957 130.631 336 256 336Z" fill="#1A251E"/>
+<path id="Vector_2" d="M59 122L227 44L447 127L282 220L59 122Z" fill="url(#paint0_linear_0_337)" stroke-width="5" stroke="#DDC99F"/>
+<path id="Vector_3" d="M59 122V260L282 352V220L59 122Z" fill="url(#paint1_linear_0_337)" stroke-width="5" stroke="#5F4335"/>
+<path id="Vector_4" d="M282 220V352L447 262V127L282 220Z" fill="#B27245" stroke-width="5" stroke="#5F4335"/>
+<path id="Vector_5" d="M365 87V6H392V107" fill="#55443A" stroke-width="5" stroke="#3F3931"/>
+<path id="Vector_6" opacity="0.65" d="M370 6C357.333 -8.66667 356 -21 366 -31C380 -43 381.333 -55.3333 370 -68" stroke-width="17" stroke="#C1B7A3"/>
+<g id="Group">
+<path id="Vector_7" d="M94 171L126 183V224L94 212V171ZM157 198L189 211V253L157 240V198ZM219 226L252 239V281L219 268V226ZM309 240L335 226V266L309 280V240ZM374 204L400 188V227L374 243V204Z" fill="#F2D18A" stroke-width="4" stroke="#5C4337"/>
+</g>
+<path id="Vector_8" d="M51 268L287 364L463 264" stroke-width="7" stroke="#E4C58C"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_337" x1="59" y1="44" x2="84.6314" y2="232.352" gradientUnits="userSpaceOnUse">
+<stop stop-color="#3D3F39"/>
+<stop offset="1" stop-color="#252B2A"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_337" x1="59" y1="122" x2="59" y2="352" gradientUnits="userSpaceOnUse">
+<stop stop-color="#C88448"/>
+<stop offset="1" stop-color="#8F543B"/>
+</linearGradient>
+<clipPath id="clip0_0_337">
+<rect width="520" height="355" fill="white"/>
+</clipPath>
+</defs>
+</svg>

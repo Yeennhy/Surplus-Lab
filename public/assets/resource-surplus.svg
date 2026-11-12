@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 160" role="img" aria-label="Giá trị thặng dư hình thành sau quá trình sản xuất">
+  <ellipse cx="110" cy="144" rx="80" ry="11" fill="#6b4937" opacity=".2"/>
+  <circle cx="110" cy="78" r="59" fill="#f0d7a4" stroke="#9d6343" stroke-width="7"/>
+  <circle cx="110" cy="78" r="45" fill="#ba7151" stroke="#8d493a" stroke-width="4"/>
+  <path d="M110 47v61M95 58c8-9 25-10 32-2 12 15-15 19-25 23-18 7-11 26 6 26 9 0 17-3 22-9" fill="none" stroke="#fff3d4" stroke-width="7" stroke-linecap="round"/>
+  <path d="m35 36 4 9 9 4-9 4-4 9-4-9-9-4 9-4zm145 2 4 9 9 4-9 4-4 9-4-9-9-4 9-4z" fill="#e4b667"/>
+  <path d="M108 7V2m-65 82H31m151 0h12M51 25l-8-8m129 8 8-8" stroke="#b2774a" stroke-width="5" stroke-linecap="round"/>
+</svg>

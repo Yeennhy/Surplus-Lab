@@ -26,7 +26,7 @@ npm install
 npm run dev
 ```
 
-Mở `http://localhost:3000`. Kiểm tra bằng `npm run lint`, `npm run typecheck`, `npm run build`. Các route hiện là khung điều hướng; gameplay và mô phỏng cần được phát triển theo [tiến độ 6 ngày](docs/TIEN_DO_6_NGAY.md).
+`http://localhost:3000` hiện là trang Landing khung của M1. Để kiểm thử trực tiếp phần nhóm B đã làm, mở `http://localhost:3000/learn/chapter-2`, `http://localhost:3000/learn/chapter-3` hoặc `http://localhost:3000/learn/chapter-4`. Kiểm tra bằng `npm run test`, `npm run lint`, `npm run typecheck`, `npm run build`. Các route còn lại tiếp tục phát triển theo [tiến độ 6 ngày](docs/TIEN_DO_6_NGAY.md). Xem [bàn giao M4/M6](docs/BAN_GIAO_M4_M6.md) để tích hợp và kiểm tra.
 
 ## Công nghệ và cấu trúc
 

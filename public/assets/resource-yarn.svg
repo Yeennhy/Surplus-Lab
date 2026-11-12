@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 160" role="img" aria-label="Cuộn sợi thành phẩm">
+  <ellipse cx="110" cy="143" rx="78" ry="11" fill="#7d573f" opacity=".18"/>
+  <path d="M34 129h150" stroke="#825a40" stroke-width="9" stroke-linecap="round"/>
+  <path d="M58 35h46l-7 87H65zM118 25h45l-8 97h-29z" fill="#ead1a0" stroke="#a77d52" stroke-width="5"/>
+  <path d="M60 54h43m-41 15h40m-39 15h37m-34 15h32m21-58h46m-45 17h44m-42 17h41m-41 17h37" stroke="#c69d6b" stroke-width="4"/>
+  <path d="M50 34h62m-3 90H53m55-100h64m-6 99h-51" stroke="#765a43" stroke-width="6" stroke-linecap="round"/>
+  <path d="M164 73q48 11 29 46-7 12-16 9" fill="none" stroke="#d2aa7a" stroke-width="5"/>
+</svg>

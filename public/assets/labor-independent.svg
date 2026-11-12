@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 190" role="img" aria-label="Người thợ dệt độc lập bên khung cửi">
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#f2d9a2"/><stop offset="1" stop-color="#c4a86f"/></linearGradient></defs>
+  <rect width="240" height="190" rx="20" fill="url(#bg)"/>
+  <circle cx="120" cy="77" r="66" fill="#fff1cd" opacity=".65"/>
+  <path d="M18 150h204v31H18z" fill="#8b623e"/><path d="M28 151v-56h39v56m106 0V95h39v56M28 105h184" fill="none" stroke="#65442f" stroke-width="8" stroke-linecap="round"/>
+  <path d="M40 112h158M42 122h152M44 132h152" stroke="#e3bd72" stroke-width="3"/>
+  <path d="M65 162c1-35 22-53 56-53s53 18 55 53" fill="#426c68" stroke="#3d5147" stroke-width="4"/>
+  <path d="M101 108h39l-8 22-13 8-14-8z" fill="#c7956d"/>
+  <ellipse cx="120" cy="76" rx="31" ry="37" fill="#c7956d"/>
+  <path d="M88 71c-1-25 13-40 32-40s33 16 32 40c-8-7-12-17-16-22-14 13-28 15-48 22" fill="#4c3228"/>
+  <path d="M100 82h7m26 0h7" stroke="#4c3228" stroke-width="3" stroke-linecap="round"/>
+  <path d="M111 98c6 5 13 5 19 0" stroke="#884f39" stroke-width="2" fill="none"/>
+  <path d="M89 139c-13-1-28 4-39 13m102-13c13-1 28 4 39 13" fill="none" stroke="#c7956d" stroke-width="11" stroke-linecap="round"/>
+  <circle cx="194" cy="56" r="18" fill="#e8bd67" stroke="#a66d40" stroke-width="4"/><circle cx="194" cy="56" r="6" fill="#af7545"/>
+</svg>
