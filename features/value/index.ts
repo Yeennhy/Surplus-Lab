@@ -115,3 +115,7 @@ export function evaluateProofChain(steps: readonly ProofStep[]) {
   const expected: ProofStep[] = ["old-transfer", "new-labor", "surplus-after-v"];
   return { correct: steps.length === 3 && steps.every((step, index) => step === expected[index]), expected };
 }
+
+export * from "./types";
+export * from "./constants";
+export * from "./engine";

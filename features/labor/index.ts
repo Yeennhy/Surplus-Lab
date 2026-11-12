@@ -90,3 +90,15 @@ export function evaluateLaborValueFile(pieces: readonly LaborValuePiece[]) {
     decoys: pieces.filter((id) => !required.includes(id)),
   };
 }
+
+export * from "./engine";
+export type {
+  Chapter2Step, CharacterProfile, ScenarioAnswer, ScenarioEvaluationResult,
+  AttributeQuizQuestion, ValueComponentId, ValueComponentDefinition,
+  ValueComponentAnswer, Chapter2State, Chapter2Result,
+  LaborCondition as M6LaborCondition, LaborScenario as M6LaborScenario,
+} from "./types";
+export {
+  LABOR_CONDITIONS, LABOR_SCENARIOS as M6_LABOR_SCENARIOS,
+  ATTRIBUTE_QUIZ_QUESTIONS, VALUE_COMPONENTS, VALUE_COMPONENT_MATCHING_ITEMS,
+} from "./constants";

@@ -17,6 +17,12 @@ export const TEXTBOOK_FACTORY_CONFIG: Readonly<FactoryConfig> = Object.freeze({
   newValueTotal: 30,
 });
 
+export const DEFAULT_FACTORY_CONFIG: Readonly<FactoryConfig> = Object.freeze({
+  ...TEXTBOOK_FACTORY_CONFIG,
+  cottonTotal: TEXTBOOK_FACTORY_CONFIG.cottonValue,
+  depreciationTotal: TEXTBOOK_FACTORY_CONFIG.machineDepreciation,
+});
+
 export const EMPTY_FACTORY_SETUP: Readonly<FactorySetup> = Object.freeze({
   cottonReady: false,
   machineReady: false,
@@ -40,6 +46,22 @@ const MONEY_FIELDS = [
   "newValueTotal",
 ] as const;
 
+/** Accept both naming schemes while keeping the factory engine's calculations. */
+export function normalizeFactoryConfig(config: Partial<FactoryConfig> = {}): FactoryConfig {
+  const cottonValue = config.cottonTotal ?? config.cottonValue ?? DEFAULT_FACTORY_CONFIG.cottonValue;
+  const machineDepreciation = config.depreciationTotal ?? config.machineDepreciation ?? DEFAULT_FACTORY_CONFIG.machineDepreciation;
+  return {
+    totalHours: config.totalHours ?? DEFAULT_FACTORY_CONFIG.totalHours,
+    necessaryHours: config.necessaryHours ?? DEFAULT_FACTORY_CONFIG.necessaryHours,
+    cottonValue,
+    machineDepreciation,
+    cottonTotal: cottonValue,
+    depreciationTotal: machineDepreciation,
+    laborPowerValue: config.laborPowerValue ?? DEFAULT_FACTORY_CONFIG.laborPowerValue,
+    newValueTotal: config.newValueTotal ?? DEFAULT_FACTORY_CONFIG.newValueTotal,
+  };
+}
+
 /** Returns every invalid field so the preparation screen can show useful feedback. */
 export function validateFactoryConfig(config: FactoryConfig): FactoryIssue[] {
   const issues: FactoryIssue[] = [];
@@ -51,6 +73,13 @@ export function validateFactoryConfig(config: FactoryConfig): FactoryIssue[] {
         field,
         message: `${field} phải là số hữu hạn không âm.`,
       });
+    }
+  }
+
+  for (const field of ["cottonTotal", "depreciationTotal"] as const) {
+    const value = config[field];
+    if (value !== undefined && (!Number.isFinite(value) || value < 0)) {
+      issues.push({ code: "invalid-number", field, message: `${field} phải là số hữu hạn không âm.` });
     }
   }
 
@@ -163,7 +192,22 @@ export function getFactorySnapshot(config: FactoryConfig, hour: number): Factory
     productValue: transferredValue + newValue,
     illustrativeFullInputValue: capitalAdvancedTotal + surplusValue,
     isInterpolated: hour !== 0 && !isCheckpoint && !isComplete,
+    cottonUsed: cottonTransferred,
+    machineDepreciation: machineTransferred,
+    constantCapital: transferredValue,
+    isNecessaryLabor: hour <= config.necessaryHours,
+    isSurplusLabor: hour > config.necessaryHours,
+    progressPercent: progress * 100,
   };
+}
+
+export function calculateFactorySnapshot(
+  hour: number,
+  config: FactoryConfig = DEFAULT_FACTORY_CONFIG,
+): FactorySnapshot {
+  const normalized = normalizeFactoryConfig(config);
+  const clampedHour = Math.max(0, Math.min(hour, normalized.totalHours));
+  return getFactorySnapshot(normalized, clampedHour);
 }
 
 export function getFactoryResult(config: FactoryConfig): FactoryResult {
@@ -180,5 +224,12 @@ export function getFactoryResult(config: FactoryConfig): FactoryResult {
     surplusHours: config.totalHours - config.necessaryHours,
     checkpoint,
     completion,
+    rateOfSurplusValue: config.laborPowerValue > 0
+      ? (completion.surplusValue / config.laborPowerValue) * 100
+      : 0,
   };
+}
+
+export function calculateFactoryResult(config: FactoryConfig = DEFAULT_FACTORY_CONFIG): FactoryResult {
+  return getFactoryResult(normalizeFactoryConfig(config));
 }
