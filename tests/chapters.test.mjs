@@ -14,9 +14,9 @@ requireTs.extensions[".ts"] = (module, filename) => {
 };
 
 const { LABOR_SCENARIOS, LABOR_POWER_VALUE_PARTS, evaluateLaborScenario } =
-  requireTs("../features/labor/index.ts");
-const { getValueItems, evaluateValuePlacements } = requireTs("../features/value/index.ts");
-const { TEXTBOOK_FACTORY_CONFIG, getFactoryResult } = requireTs("../features/factory/engine.ts");
+  requireTs("../backend/domain/labor/index.ts");
+const { getValueItems, evaluateValuePlacements } = requireTs("../backend/domain/value/index.ts");
+const { TEXTBOOK_FACTORY_CONFIG, getFactoryResult } = requireTs("../backend/domain/factory/engine.ts");
 
 test("only the employed worker satisfies both labor-power conditions", () => {
   assert.equal(LABOR_SCENARIOS.length, 3);

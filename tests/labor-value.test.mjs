@@ -23,13 +23,11 @@ const {
   getConditions,
   getScenarios,
   getValueComponents,
-} = requireTs("../features/labor/engine.ts");
+} = requireTs("../backend/domain/labor/engine.ts");
 
 const {
   TEXTBOOK_NUMBERS,
-  VALUE_CARDS,
-  CATEGORY_ZONES,
-} = requireTs("../features/value/constants.ts");
+} = requireTs("../backend/domain/value/constants.ts");
 
 const {
   evaluatePlacement,
@@ -37,7 +35,7 @@ const {
   calculateZoneTotals,
   validateFormula,
   generateResult,
-} = requireTs("../features/value/engine.ts");
+} = requireTs("../backend/domain/value/engine.ts");
 
 // ==========================================
 // TEST SUITE: M6 - CHAPTER 2 (LABOR POWER)
