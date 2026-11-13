@@ -253,28 +253,21 @@ export function QuizScreen({ onComplete }: { onComplete?: (result: QuizResult) =
               <div className={`${styles.feedbackHero} ${answerWasCorrect ? styles.feedbackSuccess : styles.feedbackRetry}`}><span aria-hidden="true">{answerWasCorrect ? "✦" : "↻"}</span><div><small>{answerWasCorrect ? "THÊM MỘT DẤU MỐC TRÊN HÀNH TRÌNH" : "CÒN MỘT LẦN SUY LUẬN NỮA"}</small><h1>{answerWasCorrect ? "Chính xác!" : "Thử một góc nhìn khác"}</h1></div></div>
               <p className="mt-2 text-sm text-[#725e43]">{answerWasCorrect ? "Đáp án đúng. Cùng xem lại cách giải." : "Đọc lời giải rồi thử lại hoặc chuyển sang câu tiếp theo."}</p>
 
-              <section className="mt-7 rounded-md border border-[#bca174] bg-[#e1cda0] p-5 sm:p-7" aria-label="Đối chiếu đáp án">
-                <h2 className="font-serif text-lg font-bold">{question.prompt}</h2>
-                <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded bg-[#994c3c] px-4 py-3 text-sm font-bold text-[#fff1ce]">
-                    <span className="block text-[10px] uppercase tracking-widest opacity-80">Đã chọn</span>
-                    <span className="mt-1 block leading-relaxed">{getSelectedAnswerLabel(question, submittedAnswer)}</span>
-                  </div>
-                  <div className="rounded bg-[#34704e] px-4 py-3 text-sm font-bold text-[#fff1ce]">
-                    <span className="block text-[10px] uppercase tracking-widest opacity-80">Đáp án</span>
-                    <span className="mt-1 block leading-relaxed">{getCorrectAnswerLabel(question)}</span>
-                  </div>
+              <section className={styles.answerTheater} aria-label="Đối chiếu đáp án">
+                <div className={styles.answerTheaterHeading}><span>HỒ SƠ CÂU {String(questionIndex + 1).padStart(2, "0")}</span><strong>{answerWasCorrect ? "DẤU XÁC NHẬN" : "DẤU ĐỐI CHIẾU"}</strong></div>
+                <h2>{question.prompt}</h2>
+                <div className={styles.answerReveal}>
+                  <article className={styles.answerAttempt}><span className={styles.answerSymbol} aria-hidden="true">{answerWasCorrect ? "✓" : "?"}</span><small>BẠN ĐÃ CHỌN</small><strong>{getSelectedAnswerLabel(question, submittedAnswer)}</strong></article>
+                  <span className={styles.answerBridge} aria-hidden="true">→</span>
+                  <article className={styles.answerTruth}><span className={styles.answerSymbol} aria-hidden="true">✦</span><small>{answerWasCorrect ? "VÌ SAO ĐÚNG" : "ĐÁP ÁN THEO GIÁO TRÌNH"}</small><strong>{answerWasCorrect ? question.explanation[0] : getCorrectAnswerLabel(question)}</strong></article>
                 </div>
               </section>
 
-              <section className="mt-4 rounded-md border border-[#bca174] bg-[#e1cda0] p-5 sm:p-7">
-                <h2 className="font-serif text-lg font-bold uppercase">Hướng dẫn giải chi tiết</h2>
-                <ol className="mt-4 space-y-3">
+              <section className={styles.explanationTrail}>
+                <div className={styles.explanationHeading}><span aria-hidden="true">◈</span><div><small>GIẢI MÃ KIẾN THỨC</small><h2>Từng bước suy luận</h2></div></div>
+                <ol>
                   {question.explanation.map((step, index) => (
-                    <li key={`${question.id}-step-${index}`} className="flex gap-3 text-sm leading-relaxed">
-                      <span className="font-bold text-[#80603c]">Bước {index + 1}:</span>
-                      <span>{step}</span>
-                    </li>
+                    <li key={`${question.id}-step-${index}`}><span className={styles.explanationNumber}>{String(index + 1).padStart(2, "0")}</span><p>{step}</p></li>
                   ))}
                 </ol>
               </section>

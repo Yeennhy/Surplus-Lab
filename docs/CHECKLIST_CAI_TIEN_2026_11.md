@@ -19,11 +19,11 @@
 - [x] Bổ sung bảng số liệu trực tiếp trên sàn 100 bot: lượt hiện tại, số giao dịch, tiền chuyển tay, giá trị hàng toàn sàn và ID từng bot.
 - [x] Tự mở câu hỏi nổi sau tám lượt; làm mờ nền; trả lời sai chỉ hiện gợi ý; trả lời đúng mở cảnh chuyển về bản đồ.
 - [x] Thay emoji không sát nội dung ở hồ sơ sức lao động bằng minh họa nhân vật; thêm dấu xác minh và ba chứng cứ ở màn hoàn thành.
-- [x] Màn giá trị sức lao động: đọc câu hỏi rồi nhấn mở năm thẻ; hiệu ứng tung thẻ; kiểm tra khi chọn đúng ba mục.
-- [x] Bỏ câu “Dây chuyền đã sẵn sàng! Bông → Xơ → Sợi → Cuộn thành phẩm”; thêm trò ghép ba nguồn giá trị sau ca, hoàn thành mới mở Chương 4.
-- [x] Làm phản hồi thử thách và bảng kết quả theo bậc thành tích; cho mở từng câu để xem đáp án đã chọn và lời giải.
+- [x] Màn giá trị sức lao động: đọc câu hỏi rồi thả năm vật thể tròn bay và lơ lửng; chọn đúng ba mục để kiểm tra.
+- [x] Bỏ câu “Dây chuyền đã sẵn sàng! Bông → Xơ → Sợi → Cuộn thành phẩm” và khung xanh trống; tô ba nguồn giá trị bằng ba màu c, v, m, kiểm tra xong mới mở Chương 4.
+- [x] Làm phản hồi thử thách thành màn đối chiếu trực quan và lộ trình giải thích; bảng kết quả cho mở từng câu để xem đáp án đã chọn và lời giải.
 - [x] Cho truy cập trực tiếp khu thử nghiệm; thêm đường về bản đồ và lưu kết quả trong phiên để quay lại đúng bảng kết quả từ /sandbox.
-- [x] Rà trên Chromium: bản đồ, tám lượt bot, phản hồi đúng/sai, mở chặng 2, tung năm thẻ, xem lại câu hỏi, trò ghép sau ca và điều hướng sandbox.
+- [x] Rà trên Chromium: bản đồ, tám lượt bot, phản hồi đúng/sai, mở chặng 2, vật thể lơ lửng, tô sai rồi sửa màu, xem lại câu hỏi và điều hướng sandbox.
 - [x] Rà năm trang ở màn hình 390 px: không tràn ngang; chạy lại typecheck, lint, 39 test và build.
 
 Ghi chú: 51 frame Figma là tập trạng thái và minh họa tham chiếu. Phần giao diện được thiết kế lại theo hệ màu, chất liệu và nội dung của đồ án thay vì sao chép từng frame theo pixel.

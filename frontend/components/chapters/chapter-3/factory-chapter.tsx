@@ -99,6 +99,7 @@ export function FactoryChapter() {
   const [matchSource, setMatchSource] = useState<string | null>(null);
   const [matchPairs, setMatchPairs] = useState<Record<string, string>>({});
   const [matchFeedback, setMatchFeedback] = useState("");
+  const [paintVerified, setPaintVerified] = useState(false);
   const matchComplete = matchPairs.c === "c" && matchPairs.v === "v" && matchPairs.m === "m";
   const hourRef = useRef(0);
   const snapshot = getFactorySnapshot(config, hour);
@@ -176,7 +177,7 @@ export function FactoryChapter() {
       stage: FactoryStage; setup: FactorySetup; selectedDecoys: Record<Decoy, boolean>;
       hour: number; passedCheckpoint: boolean; missionDone: boolean; auditDone: boolean;
       line: LineConfiguration; lineTrialPassed: boolean; batch1Plan: BatchPlan; batch2Plan: BatchPlan;
-      checkpointAnswer: "yes" | "no" | null; checkpointPrediction?: number | null; seenBatches: Array<1 | 2>; matchPairs?: Record<string, string>;
+      checkpointAnswer: "yes" | "no" | null; checkpointPrediction?: number | null; seenBatches: Array<1 | 2>; matchPairs?: Record<string, string>; paintVerified?: boolean;
     }>(3);
     const stages: FactoryStage[] = ["setup", "ready", "batch1", "operate", "running", "paused", "mission", "checkpoint", "stopReport", "question", "batch2", "audit", "result"];
     if (saved && stages.includes(saved.stage) && Number.isFinite(saved.hour) && saved.hour >= 0 && saved.hour <= 8) {
@@ -205,13 +206,14 @@ export function FactoryChapter() {
       if ([0, 15, 30].includes(saved.checkpointPrediction ?? -1)) setCheckpointPrediction(saved.checkpointPrediction ?? null);
       if (Array.isArray(saved.seenBatches)) setSeenBatches(saved.seenBatches.filter((batch) => batch === 1 || batch === 2));
       if (saved.matchPairs && typeof saved.matchPairs === "object") setMatchPairs(saved.matchPairs);
+      if (saved.paintVerified) setPaintVerified(true);
     }
     setHydrated(true);
   }, []);
 
   useEffect(() => {
-    if (hydrated) saveChapterDraft(3, { stage, setup, selectedDecoys, hour, passedCheckpoint, missionDone, auditDone, line, lineTrialPassed, batch1Plan, batch2Plan, checkpointAnswer, checkpointPrediction, seenBatches, matchPairs });
-  }, [hydrated, stage, setup, selectedDecoys, hour, passedCheckpoint, missionDone, auditDone, line, lineTrialPassed, batch1Plan, batch2Plan, checkpointAnswer, checkpointPrediction, seenBatches, matchPairs]);
+    if (hydrated) saveChapterDraft(3, { stage, setup, selectedDecoys, hour, passedCheckpoint, missionDone, auditDone, line, lineTrialPassed, batch1Plan, batch2Plan, checkpointAnswer, checkpointPrediction, seenBatches, matchPairs, paintVerified });
+  }, [hydrated, stage, setup, selectedDecoys, hour, passedCheckpoint, missionDone, auditDone, line, lineTrialPassed, batch1Plan, batch2Plan, checkpointAnswer, checkpointPrediction, seenBatches, matchPairs, paintVerified]);
 
   useEffect(() => {
     if (stage !== "running") return;
@@ -307,6 +309,7 @@ export function FactoryChapter() {
     setMatchSource(null);
     setMatchPairs({});
     setMatchFeedback("");
+    setPaintVerified(false);
     setStage("ready");
   }
 
@@ -452,7 +455,7 @@ export function FactoryChapter() {
                 </div>
               ))}
             </div>
-            <p className={`${styles.operationFeedback} ${lineTrialPassed ? styles.trialPassed : ""}`} role="status"><span aria-hidden="true">{lineTrialPassed ? "✓" : "⚙"}</span>{operationFeedback}</p>
+            {!lineTrialPassed && operationFeedback && <p className={styles.operationFeedback} role="status"><span aria-hidden="true">⚙</span>{operationFeedback}</p>}
             {operationEvents.length > 0 && (
               <div className={styles.operationEventsList}>
                 {operationEvents.map((evt, idx) => (
@@ -621,11 +624,14 @@ export function FactoryChapter() {
             <p className={styles.resultFormula}>G = c + (v + m) = {result.constantCapital} + ({result.variableCapital} + {result.surplusValue}) = {result.productValue} USD</p>
           </section>
           <section className={styles.matchMission} aria-labelledby="factory-match-title">
-            <div className={styles.matchIntro}><span>THỬ THÁCH CUỐI CA · GHÉP SỔ GIÁ TRỊ</span><h2 id="factory-match-title">Nguồn nào đi vào dòng giá trị nào?</h2><p>Chạm một thẻ bên trái, rồi chạm dòng tương ứng bên phải. Ghép đủ ba cặp để xác nhận bạn đã đọc được sổ của ca sản xuất.</p></div>
-            <div className={styles.matchColumns}><div aria-label="Nguồn trong ca sản xuất"><small>NGUỒN</small>{[["c","Bông và hao mòn máy"],["v","Phần giá trị bù sức lao động"],["m","Bốn giờ lao động sau"]].map(([id,label]) => <button key={id} type="button" className={matchSource === id ? styles.matchSelected : ""} aria-pressed={matchSource === id} onClick={() => { setMatchSource(id); setMatchFeedback(""); }}><span>{matchPairs[id] ? "✓" : "○"}</span>{label}</button>)}</div><div aria-label="Dòng giá trị trong sản phẩm"><small>DÒNG GIÁ TRỊ</small>{[["m","m · Giá trị thặng dư mới"],["c","c · Giá trị cũ chuyển vào sợi"],["v","v · Bù đắp giá trị sức lao động"]].map(([id,label]) => <button key={id} type="button" className={Object.values(matchPairs).includes(id) ? styles.matchConnected : ""} onClick={() => { if (!matchSource) { setMatchFeedback("Hãy chọn một nguồn ở cột trái trước."); return; } if (matchSource !== id) { setMatchFeedback("Chưa khớp. Hãy nghĩ xem tư liệu sản xuất chuyển giá trị cũ hay tạo giá trị mới."); return; } const next = { ...matchPairs, [matchSource]: id }; setMatchPairs(next); setMatchSource(null); setMatchFeedback("Đã nối đúng một cặp."); if (next.c === "c" && next.v === "v" && next.m === "m") emitChapterCompleted(3); }}><span>{Object.values(matchPairs).includes(id) ? "✓" : "◇"}</span>{label}</button>)}</div></div>
-            <div className={styles.matchStatus} role="status"><strong>{Object.keys(matchPairs).length}/3 CẶP ĐÃ NỐI</strong><span>{matchComplete ? "Hoàn thành! Bông và máy chuyển cũ; lao động tạo phần mới vượt v." : matchFeedback || "Chọn một thẻ ở mỗi cột để nối."}</span></div>
+            <div className={styles.matchIntro}><span>THỬ THÁCH CUỐI CA · TÔ MÀU SỔ GIÁ TRỊ</span><h2 id="factory-match-title">Tô ba nguồn bằng đúng màu giá trị</h2><p>Chọn một màu bút ở dưới, rồi tô lên nguồn tương ứng. Bạn có thể đổi màu trước khi kiểm tra.</p></div>
+            <div className={styles.inkLegend} aria-label="Chú giải ba màu giá trị"><span><b>c</b> Giá trị cũ chuyển vào sợi</span><span><b>v</b> Bù đắp sức lao động</span><span><b>m</b> Giá trị thặng dư</span></div>
+            <div className={styles.paintBoard} aria-label="Ba nguồn cần tô màu">{[["c","Bông và hao mòn máy","Tư liệu sản xuất"],["v","Phần giá trị bù sức lao động","Bốn giờ đầu"],["m","Bốn giờ lao động sau","Phần dôi ra"]].map(([id,label,caption]) => <button key={id} type="button" className={styles.paintCard} data-ink={matchPairs[id] ?? ""} aria-label={`${label}. ${matchPairs[id] ? `Đã tô màu ${matchPairs[id]}` : "Chưa tô màu"}`} onClick={() => { if (!matchSource) { setMatchFeedback("Hãy chọn một trong ba màu bút ở dưới trước."); return; } setMatchPairs((current) => ({ ...current, [id]: matchSource })); setPaintVerified(false); setMatchFeedback(""); }}><small>{caption}</small><strong>{label}</strong><span>{matchPairs[id] ? `MÀU ${matchPairs[id].toUpperCase()}` : "CHẠM ĐỂ TÔ"}</span></button>)}</div>
+            <div className={styles.inkPalette} role="group" aria-label="Chọn màu bút">{[["c","MÀU GIÁ TRỊ CŨ"],["v","MÀU BÙ ĐẮP"],["m","MÀU THẶNG DƯ"]].map(([id,label]) => <button key={id} type="button" data-ink={id} aria-pressed={matchSource === id} onClick={() => { setMatchSource(id); setMatchFeedback(""); }}><span aria-hidden="true">{id}</span>{label}</button>)}</div>
+            <div className={styles.matchStatus} role="status"><strong>{Object.keys(matchPairs).length}/3 NGUỒN ĐÃ TÔ</strong><span>{paintVerified ? "Chính xác! c là giá trị cũ; lao động tạo giá trị mới gồm v và m." : matchFeedback || "Chọn màu bút rồi chạm vào một nguồn phía trên."}</span></div>
+            <button className={styles.paintCheck} type="button" disabled={Object.keys(matchPairs).length !== 3 || paintVerified} onClick={() => { if (matchComplete) { setPaintVerified(true); setMatchFeedback(""); emitChapterCompleted(3); } else { setMatchFeedback("Có màu chưa khớp. Gợi ý: bông và máy chỉ chuyển giá trị đã có; phần dôi ra xuất hiện sau khi bù sức lao động."); } }}>{paintVerified ? "ĐÃ XÁC NHẬN BA MÀU" : "KIỂM TRA BẢNG MÀU →"}</button>
           </section>
-          {matchComplete && <section className={`${gameStyles.panel} ${styles.rewardPanel}`}>
+          {matchComplete && paintVerified && <section className={`${gameStyles.panel} ${styles.rewardPanel}`}>
             <button className={styles.rewardBadge} type="button" aria-expanded={badgeExpanded} onClick={() => setBadgeExpanded((current) => !current)}><span className={styles.badgeStar} aria-hidden="true">✦</span><span><small>HUY HIỆU ĐÃ MỞ KHÓA</small><strong>NHÀ ĐIỀU TRA GIÁ TRỊ</strong><em>{badgeExpanded ? "THU GỌN LỜI GIẢI ↑" : "CHẠM ĐỂ XEM VÌ SAO BẠN ĐẠT ĐƯỢC →"}</em></span></button>
             {badgeExpanded && <p className={styles.badgeExplanation}>Bạn đã nhận ra 4 giờ đầu bù đắp v và 4 giờ sau tạo ra m. Bông và máy chỉ chuyển giá trị cũ vào sợi; sức lao động là nguồn của giá trị mới.</p>}
             <div className={styles.rewardActions}>
