@@ -25,7 +25,7 @@ const {
   startFactory,
   validateFactoryConfig,
   validateFactorySetup,
-} = requireTs("../features/factory/engine.ts");
+} = requireTs("../backend/domain/factory/engine.ts");
 
 const {
   TEXTBOOK_SANDBOX_CONFIG,
@@ -33,7 +33,7 @@ const {
   compareSandbox,
   resetSandboxConfig,
   validateSandboxConfig,
-} = requireTs("../features/sandbox/engine.ts");
+} = requireTs("../backend/domain/sandbox/engine.ts");
 
 const readySetup = { cottonReady: true, machineReady: true, laborHired: true };
 

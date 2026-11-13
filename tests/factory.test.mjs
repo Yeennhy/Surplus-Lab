@@ -26,7 +26,7 @@ const {
   startFactory,
   validateFactoryConfig,
   validateFactorySetup,
-} = requireTs("../features/factory/engine.ts");
+} = requireTs("../backend/domain/factory/engine.ts");
 
 const readySetup = { cottonReady: true, machineReady: true, laborHired: true };
 

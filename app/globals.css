@@ -1,8 +1,36 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Be Vietnam Pro";
+  src: url("/fonts/BeVietnamPro-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  src: url("/fonts/BeVietnamPro-Bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Be Vietnam Pro";
+  src: url("/fonts/BeVietnamPro-ExtraBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 800 900;
+  font-display: swap;
+}
+@theme {
+  --font-sans: "Be Vietnam Pro", Arial, sans-serif;
+  --font-serif: "Be Vietnam Pro", Arial, sans-serif;
+}
 :root { color-scheme: light; }
-body { margin: 0; background: #f7f5ef; color: #172119; font-family: Arial, Helvetica, sans-serif; }
-a:not([class*="text-"]) { color: #155e40; }
-@font-face { font-family: 'Be Vietnam Pro'; src: url('/fonts/BeVietnamPro-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Be Vietnam Pro'; src: url('/fonts/BeVietnamPro-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Be Vietnam Pro'; src: url('/fonts/BeVietnamPro-ExtraBold.ttf') format('truetype'); font-weight: 800 900; font-style: normal; font-display: swap; }
+html { font-family: var(--font-sans); }
+body { margin: 0; background: #f7f5ef; color: #172119; font-family: var(--font-sans); line-height: 1.6; }
+button, input, select, textarea { font-family: inherit; }
+a { color: #155e40; text-underline-offset: .18em; }
+:focus-visible { outline: 3px solid #bb6a39; outline-offset: 3px; }
+::selection { background: #c6dbbe; color: #172119; }
+h1, h2, h3 { text-wrap: balance; }
+p, li { text-wrap: pretty; }

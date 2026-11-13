@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Surplus Lab – The Factory of Value",
+  title: "Xưởng giá trị – Hành trình khám phá giá trị thặng dư",
   description: "Website học tập tương tác về giá trị thặng dư",
 };
 

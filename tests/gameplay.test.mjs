@@ -12,10 +12,10 @@ requireTs.extensions[".ts"] = (module, filename) => {
   module._compile(compiled.outputText, filename);
 };
 
-const labor = requireTs("../features/labor/index.ts");
-const factory = requireTs("../features/factory/gameplay.ts");
-const value = requireTs("../features/value/index.ts");
-const engine = requireTs("../features/factory/engine.ts");
+const labor = requireTs("../backend/domain/labor/index.ts");
+const factory = requireTs("../backend/domain/factory/gameplay.ts");
+const value = requireTs("../backend/domain/value/index.ts");
+const engine = requireTs("../backend/domain/factory/engine.ts");
 
 test("chapter 2 requires both conditions and retains a precise contradiction", () => {
   const correct = {
